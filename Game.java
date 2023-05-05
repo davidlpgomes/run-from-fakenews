@@ -38,11 +38,12 @@ public class Game {
         Position pos;
 
         // Initialize players
+        int last = this.BOARD_SIZE - 1;
         int middle = this.BOARD_SIZE / 2;
 
         this.board[0][middle] = new Player(new Position(0, middle));
-        this.board[middle][8] = new Player(new Position(middle, 8));
-        this.board[8][middle] = new Player(new Position(8, middle));
+        this.board[middle][last] = new Player(new Position(middle, last));
+        this.board[last][middle] = new Player(new Position(last, middle));
         this.board[middle][0] = new Player(new Position(middle, 0));
 
         // Initialize restrict sectors
