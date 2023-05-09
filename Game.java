@@ -68,7 +68,7 @@ public class Game {
                 pos = getRandomEmptyPosition(1, this.BOARD_SIZE - 1);
                 FakeNewsType type = FakeNewsType.values()[i];
 
-                this.board[pos.getX()][pos.getY()] = new FakeNews(pos, type);
+                this.board[pos.getX()][pos.getY()] = FakeNewsFactory.createFakeNews(pos, type);
             }
         }
     }
