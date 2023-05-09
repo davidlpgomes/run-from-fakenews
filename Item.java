@@ -9,7 +9,7 @@ public class Item extends Entity {
     }
 
     public String getColor() {
-        return this.color;
+        return Item.color;
     }
 
     public ItemType getType() {

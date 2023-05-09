@@ -6,7 +6,7 @@ public class FakeNewsOneSquare extends Entity implements FakeNewsInterface {
     }
 
     public String getColor() {
-        return this.color;
+        return FakeNewsOneSquare.color;
     }
 
     public String toString() {

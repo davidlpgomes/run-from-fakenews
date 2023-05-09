@@ -1,5 +1,3 @@
-
-
 public class FakeNewsTwoSquare extends Entity implements FakeNewsInterface {
     private static final String color = Colors.ANSI_RED;
 
@@ -8,7 +6,7 @@ public class FakeNewsTwoSquare extends Entity implements FakeNewsInterface {
     }
 
     public String getColor() {
-        return this.color;
+        return FakeNewsTwoSquare.color;
     }
 
     public String toString() {

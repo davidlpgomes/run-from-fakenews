@@ -10,7 +10,7 @@ public class Game {
     private Entity[][] board;
 
     public Game() {
-        this.board = new Entity[this.BOARD_SIZE][this.BOARD_SIZE];
+        this.board = new Entity[Game.BOARD_SIZE][Game.BOARD_SIZE];
     }
 
     public int getTurns() {
@@ -38,8 +38,8 @@ public class Game {
         Position pos;
 
         // Initialize players
-        int last = this.BOARD_SIZE - 1;
-        int middle = this.BOARD_SIZE / 2;
+        int last = Game.BOARD_SIZE - 1;
+        int middle = Game.BOARD_SIZE / 2;
 
         this.board[0][middle] = new Player(new Position(0, middle));
         this.board[middle][last] = new Player(new Position(middle, last));
@@ -47,25 +47,25 @@ public class Game {
         this.board[middle][0] = new Player(new Position(middle, 0));
 
         // Initialize restrict sectors
-        for (int i = 0; i < this.NUMBER_OF_BARRIERS; i++) {
-            pos = getRandomEmptyPosition(0, this.BOARD_SIZE);
+        for (int i = 0; i < Game.NUMBER_OF_BARRIERS; i++) {
+            pos = getRandomEmptyPosition(0, Game.BOARD_SIZE);
             this.board[pos.getX()][pos.getY()] = new Barrier(pos);
         }
 
         // Initialize items
-        for (int i = 0; i < this.NUMBER_OF_ITEMS; i++) {
-            pos = getRandomEmptyPosition(0, this.BOARD_SIZE);
+        for (int i = 0; i < Game.NUMBER_OF_ITEMS; i++) {
+            pos = getRandomEmptyPosition(0, Game.BOARD_SIZE);
 
             int k = random.nextInt(ItemType.values().length);
             ItemType type = ItemType.values()[k]; 
 
-            this.board[pos.getX()][pos.getY()] = new Item(pos, type);
+            this.board[pos.getX()][pos.getY()] = ItemFactory.createItem(pos, type);
         }
 
         // Initialize fake news
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
-                pos = getRandomEmptyPosition(1, this.BOARD_SIZE - 1);
+                pos = getRandomEmptyPosition(1, Game.BOARD_SIZE - 1);
                 FakeNewsType type = FakeNewsType.values()[i];
 
                 this.board[pos.getX()][pos.getY()] = FakeNewsFactory.createFakeNews(pos, type);
@@ -76,10 +76,10 @@ public class Game {
     public void print() {
         this.printBoardSeparator();
 
-        for (int i = 0; i < this.BOARD_SIZE; i++) {
+        for (int i = 0; i < Game.BOARD_SIZE; i++) {
             System.out.print("|");
 
-            for (int j = 0; j < this.BOARD_SIZE; j++) {
+            for (int j = 0; j < Game.BOARD_SIZE; j++) {
                 if (this.board[i][j] != null) {
                     System.out.print(
                         " " + 
@@ -127,7 +127,7 @@ public class Game {
     private void printBoardSeparator() {
         System.out.print("+");
 
-        for (int i = 0; i < this.BOARD_SIZE; i++) {
+        for (int i = 0; i < Game.BOARD_SIZE; i++) {
             System.out.print("----+");
         }
 
