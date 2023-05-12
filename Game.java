@@ -44,6 +44,26 @@ public class Game {
         this.board = board;
     }
 
+    public void init() {
+        this.initializePlayers();
+        this.initializeBarriers();
+        this.initializeItems();
+        this.initializeFakeNews();
+
+        return;
+    }
+
+    public void run() {
+        while (
+                this.turns > 0 &&
+                (this.playerList.size() > 0 || this.fakeNewsList.size() > 0)
+              ) {
+
+              }
+
+        return;
+    }
+
     private void initializePlayers() {
         int last = Game.BOARD_SIZE - 1;
         int middle = Game.BOARD_SIZE / 2;
@@ -118,15 +138,6 @@ public class Game {
         return;
     }
 
-    public void init() {
-        this.initializePlayers();
-        this.initializeBarriers();
-        this.initializeItems();
-        this.initializeFakeNews();
-
-        return;
-    }
-
     public void print() {
         this.printBoardSeparator();
 
@@ -151,17 +162,6 @@ public class Game {
             this.printBoardSeparator();
         }
 
-        return;
-    }
-
-    public void run() {
-        while (
-            this.turns > 0 &&
-            (this.playerList.size() > 0 || this.fakeNewsList.size() > 0)
-        ) {
-             
-        }
-        
         return;
     }
 
