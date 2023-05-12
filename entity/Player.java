@@ -1,5 +1,8 @@
 package entity;
 
+import java.util.ArrayList;
+
+import entity.item.*;
 import utils.*;
 
 public class Player extends Entity {
@@ -8,10 +11,13 @@ public class Player extends Entity {
 
     private int id;
 
+    private ArrayList<Item> items;
+
     public Player(Position position) {
         this.setPosition(position);
-
         this.id = ++lastId;
+
+        this.items = new ArrayList<Item>();
     }
 
     public String getColor() {
@@ -20,6 +26,14 @@ public class Player extends Entity {
 
     public int getId() {
         return this.id;
+    }
+
+    public ArrayList<Item> getItems() {
+        return this.items;
+    }
+
+    public void setItems(ArrayList<Item> items) {
+        this.items = items;
     }
 
     public String toString() {

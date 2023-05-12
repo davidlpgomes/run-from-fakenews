@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Random;
+import java.util.Scanner;
 
 import entity.*;
 import entity.fakenews.*;
@@ -11,17 +13,23 @@ public class Game {
     private static final int NUMBER_OF_BARRIERS = 4;
     private static final int NUMBER_OF_ITEMS = 2;
     private static final int NUMBER_OF_FN_PER_TYPE = 2;
+    private static final int MAX_TURNS = 20;
 
     private Entity[][] board;
     private ArrayList<Player> playerList;
     private ArrayList<FakeNews> fakeNewsList;
 
+    private Scanner scanner;
+
     private int turns;
 
     public Game() {
+        this.turns = MAX_TURNS;
         this.board = new Entity[Game.BOARD_SIZE][Game.BOARD_SIZE];
         this.playerList = new ArrayList<Player>();
         this.fakeNewsList = new ArrayList<FakeNews>();
+
+        this.scanner = new Scanner(System.in);
     }
 
     public int getTurns() {
@@ -55,13 +63,96 @@ public class Game {
 
     public void run() {
         while (
-                this.turns > 0 &&
-                (this.playerList.size() > 0 || this.fakeNewsList.size() > 0)
-              ) {
+            this.turns > 0 &&
+            (this.playerList.size() > 0 || this.fakeNewsList.size() > 0)
+        ) {
+            this.print();
 
-              }
+            ListIterator<Player> itr = this.playerList.listIterator();
+            while (itr.hasNext()) {
+                if(!this.movePlayer(itr.next()))
+                    itr.remove();
+            }
+
+
+            this.turns--;
+        }
 
         return;
+    }
+
+    private boolean movePlayer(Player p) {
+        System.out.println("Movendo jogador " + p.toString());
+        System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
+
+        int opt = -1;
+        while (opt < 1 || opt > 4) {
+            System.out.print("Digite a opção: ");
+            opt = this.scanner.nextInt();
+            System.out.println();
+        }
+
+        Position pos = p.getPosition(), newPos;
+        boolean status = true;
+
+        if (opt == 1) {
+            if (pos.getX() - 1 < 0) {
+                // TODO: Fora do tabuleiro, jogador morre?
+            } else {
+                newPos = new Position(pos.getX() - 1, pos.getY());
+                status = this.movePlayerToNewPos(p, newPos);
+            }
+        } else if (opt == 2) {
+            if (pos.getX() + 1 >= this.BOARD_SIZE) {
+                // TODO: Fora do tabuleiro, jogador morre?
+            } else {
+                newPos = new Position(pos.getX() + 1, pos.getY());
+                status = this.movePlayerToNewPos(p, newPos);
+            }
+        } else if (opt == 3) {
+            if (pos.getY() - 1 >= this.BOARD_SIZE) {
+                // TODO: Fora do tabuleiro, jogador morre?
+            } else {
+                newPos = new Position(pos.getX(), pos.getY() - 1);
+                status = this.movePlayerToNewPos(p, newPos);
+            }
+        } else if (opt == 4) {
+            if (pos.getY() + 1 < 0) {
+                // TODO: Fora do tabuleiro, jogador morre?
+            } else {
+                newPos = new Position(pos.getX(), pos.getY() + 1);
+                status = this.movePlayerToNewPos(p, newPos);
+            }
+        }
+               
+        this.print();
+
+        return status;
+    }
+
+    private boolean movePlayerToNewPos(Player p, Position newPos) {
+        Position pos = p.getPosition();
+
+        Entity before = this.board[newPos.getX()][newPos.getY()];
+        System.out.println("Before is " + before);
+
+        this.board[pos.getX()][pos.getY()] = null;
+
+        if (before == null) {
+            this.board[newPos.getX()][newPos.getY()] = p;
+            p.setPosition(newPos);
+        } else if (before instanceof FakeNews) {
+            return false;
+        } else if (before instanceof Item) {
+            ArrayList<Item> playerItems = p.getItems();
+            playerItems.add((Item) before);
+            p.setItems(playerItems);
+
+            this.board[newPos.getX()][newPos.getY()] = p;
+            p.setPosition(newPos);
+        }
+
+        return true;
     }
 
     private void initializePlayers() {
