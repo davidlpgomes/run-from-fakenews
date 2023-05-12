@@ -17,8 +17,6 @@ public class Game {
     private ArrayList<FakeNews> fakeNewsList;
 
     private int turns;
-    private int numberOfPlayers;
-    private int numberOfFakeNews;
 
     public Game() {
         this.board = new Entity[Game.BOARD_SIZE][Game.BOARD_SIZE];
@@ -46,32 +44,7 @@ public class Game {
         this.board = board;
     }
 
-    public int getNumberOfPlayers() {
-        return this.numberOfPlayers;
-    }
-
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        if (numberOfPlayers < 0)
-            return;
-
-        this.numberOfPlayers = numberOfPlayers;
-        return;
-    }
-
-    public int getNumberOfFakeNews() {
-        return this.numberOfFakeNews;
-    }
-
-    public void setNumberOfFakeNews(int numberOfFakeNews) {
-        if (numberOfFakeNews < 0)
-            return;
-
-        this.numberOfFakeNews = numberOfFakeNews;
-        return;
-    }
-
     private void initializePlayers() {
-        this.setNumberOfPlayers(4);
         int last = Game.BOARD_SIZE - 1;
         int middle = Game.BOARD_SIZE / 2;
 
@@ -90,6 +63,26 @@ public class Game {
         Player p4 = new Player(new Position(middle, 0));
         this.playerList.add(p4);
         this.board[middle][0] = p4;
+
+        return;
+    }
+
+    private void initializeFakeNews() {
+        FakeNewsType type;
+        Position pos;
+
+        int numberOfTypes = FakeNewsType.values().length;
+
+        for (int i = 0; i < numberOfTypes; i++) {
+            for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
+                pos = getRandomEmptyPosition(1, Game.BOARD_SIZE - 1);
+                type = FakeNewsType.values()[i];
+
+                FakeNews fn = FakeNewsFactory.createFakeNews(pos, type);
+                this.fakeNewsList.add(fn);
+                this.board[pos.getX()][pos.getY()] = fn;
+            }
+        }
 
         return;
     }
@@ -116,21 +109,7 @@ public class Game {
             this.board[pos.getX()][pos.getY()] = ItemFactory.createItem(pos, type);
         }
 
-        // Initialize fake news
-        for (int i = 0; i < FakeNewsType.values().length; i++) {
-            for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
-                pos = getRandomEmptyPosition(1, Game.BOARD_SIZE - 1);
-                FakeNewsType type = FakeNewsType.values()[i];
-
-                FakeNews fn = FakeNewsFactory.createFakeNews(pos, type);
-                this.fakeNewsList.add(fn);
-                this.board[pos.getX()][pos.getY()] = fn;
-            }
-        }
-
-        this.setNumberOfFakeNews(
-            FakeNewsType.values().length * NUMBER_OF_FN_PER_TYPE
-        );
+        this.initializeFakeNews();
 
         return;
     }
@@ -165,7 +144,7 @@ public class Game {
     public void run() {
         while (
             this.turns > 0 &&
-            (this.numberOfPlayers > 0 || this.numberOfFakeNews > 0)
+            (this.playerList.size() > 0 || this.fakeNewsList.size() > 0)
         ) {
              
         }
