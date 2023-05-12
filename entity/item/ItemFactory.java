@@ -3,7 +3,7 @@ package entity.item;
 import entity.*;
 
 public class ItemFactory {
-    public static Entity createItem(Position position, ItemType type){
+    public static Item createItem(Position position, ItemType type){
         switch (type) {
             case RUN_AWAY:
                 return new ItemRun(position);

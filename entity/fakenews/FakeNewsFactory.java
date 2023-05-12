@@ -3,7 +3,7 @@ package entity.fakenews;
 import entity.*;
 
 public class FakeNewsFactory {
-    public static Entity createFakeNews(Position position, FakeNewsType type) {
+    public static FakeNews createFakeNews(Position position, FakeNewsType type) {
         switch (type) {
             case ONE_SQUARE:
                 return new FakeNewsOneSquare(position);
