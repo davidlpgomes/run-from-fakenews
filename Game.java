@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 import entity.*;
@@ -11,11 +12,18 @@ public class Game {
     private static final int NUMBER_OF_ITEMS = 2;
     private static final int NUMBER_OF_FN_PER_TYPE = 2;
 
-    private int turns;
     private Entity[][] board;
+    private ArrayList<Player> playerList;
+    private ArrayList<FakeNews> fakeNewsList;
+
+    private int turns;
+    private int numberOfPlayers;
+    private int numberOfFakeNews;
 
     public Game() {
         this.board = new Entity[Game.BOARD_SIZE][Game.BOARD_SIZE];
+        this.playerList = new ArrayList<Player>();
+        this.fakeNewsList = new ArrayList<FakeNews>();
     }
 
     public int getTurns() {
@@ -38,18 +46,59 @@ public class Game {
         this.board = board;
     }
 
+    public int getNumberOfPlayers() {
+        return this.numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        if (numberOfPlayers < 0)
+            return;
+
+        this.numberOfPlayers = numberOfPlayers;
+        return;
+    }
+
+    public int getNumberOfFakeNews() {
+        return this.numberOfFakeNews;
+    }
+
+    public void setNumberOfFakeNews(int numberOfFakeNews) {
+        if (numberOfFakeNews < 0)
+            return;
+
+        this.numberOfFakeNews = numberOfFakeNews;
+        return;
+    }
+
+    private void initializePlayers() {
+        this.setNumberOfPlayers(4);
+        int last = Game.BOARD_SIZE - 1;
+        int middle = Game.BOARD_SIZE / 2;
+
+        Player p1 = new Player(new Position(0, middle));
+        this.playerList.add(p1);
+        this.board[0][middle] = p1;
+
+        Player p2 = new Player(new Position(middle, last));
+        this.playerList.add(p2);
+        this.board[middle][last] = p2;
+
+        Player p3 = new Player(new Position(last, middle));
+        this.playerList.add(p3);
+        this.board[last][middle] = p3;
+
+        Player p4 = new Player(new Position(middle, 0));
+        this.playerList.add(p4);
+        this.board[middle][0] = p4;
+
+        return;
+    }
+
     public void init() {
         Random random = new Random();
         Position pos;
 
-        // Initialize players
-        int last = Game.BOARD_SIZE - 1;
-        int middle = Game.BOARD_SIZE / 2;
-
-        this.board[0][middle] = new Player(new Position(0, middle));
-        this.board[middle][last] = new Player(new Position(middle, last));
-        this.board[last][middle] = new Player(new Position(last, middle));
-        this.board[middle][0] = new Player(new Position(middle, 0));
+        this.initializePlayers();
 
         // Initialize restrict sectors
         for (int i = 0; i < Game.NUMBER_OF_BARRIERS; i++) {
@@ -68,14 +117,22 @@ public class Game {
         }
 
         // Initialize fake news
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < FakeNewsType.values().length; i++) {
             for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
                 pos = getRandomEmptyPosition(1, Game.BOARD_SIZE - 1);
                 FakeNewsType type = FakeNewsType.values()[i];
 
-                this.board[pos.getX()][pos.getY()] = FakeNewsFactory.createFakeNews(pos, type);
+                FakeNews fn = FakeNewsFactory.createFakeNews(pos, type);
+                this.fakeNewsList.add(fn);
+                this.board[pos.getX()][pos.getY()] = fn;
             }
         }
+
+        this.setNumberOfFakeNews(
+            FakeNewsType.values().length * NUMBER_OF_FN_PER_TYPE
+        );
+
+        return;
     }
 
     public void print() {
@@ -106,7 +163,14 @@ public class Game {
     }
 
     public void run() {
-
+        while (
+            this.turns > 0 &&
+            (this.numberOfPlayers > 0 || this.numberOfFakeNews > 0)
+        ) {
+             
+        }
+        
+        return;
     }
 
     private Position getRandomEmptyPosition(int lowerBound, int upperBound) {
