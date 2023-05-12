@@ -87,28 +87,41 @@ public class Game {
         return;
     }
 
-    public void init() {
-        Random random = new Random();
+    private void initializeBarriers() {
         Position pos;
 
-        this.initializePlayers();
-
-        // Initialize restrict sectors
         for (int i = 0; i < Game.NUMBER_OF_BARRIERS; i++) {
             pos = getRandomEmptyPosition(0, Game.BOARD_SIZE);
             this.board[pos.getX()][pos.getY()] = new Barrier(pos);
         }
 
-        // Initialize items
+        return;
+    }
+    
+    private void initializeItems() {
+        Random random = new Random();
+        ItemType type;
+        Position pos;
+
         for (int i = 0; i < Game.NUMBER_OF_ITEMS; i++) {
             pos = getRandomEmptyPosition(0, Game.BOARD_SIZE);
 
             int k = random.nextInt(ItemType.values().length);
-            ItemType type = ItemType.values()[k]; 
+            type = ItemType.values()[k]; 
 
-            this.board[pos.getX()][pos.getY()] = ItemFactory.createItem(pos, type);
+            this.board[pos.getX()][pos.getY()] = ItemFactory.createItem(
+                pos,
+                type
+            );
         }
 
+        return;
+    }
+
+    public void init() {
+        this.initializePlayers();
+        this.initializeBarriers();
+        this.initializeItems();
         this.initializeFakeNews();
 
         return;
