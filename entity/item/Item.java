@@ -3,7 +3,7 @@ package entity.item;
 import entity.*;
 import utils.*;
 
-public class Item extends Entity {
+public abstract class Item extends Entity {
     private static final String color = Colors.ANSI_YELLOW;
 
     public Item(Position position) {
@@ -17,4 +17,6 @@ public class Item extends Entity {
     public String toString() {
         return "??";
     }
+
+    public abstract String getName();
 }
