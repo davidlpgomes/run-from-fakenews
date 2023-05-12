@@ -82,14 +82,37 @@ public class Game {
     }
 
     private boolean movePlayer(Player p) {
-        System.out.println("Movendo jogador " + p.toString());
-        System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
+        boolean playerHasHearRumor = false;
 
+        if (p.getItems().size() > 0) {
+            ListIterator<Item> itr = p.getItems().listIterator();
+            while (itr.hasNext()) {
+                if (itr.next() instanceof ItemHearRumor) {
+                    playerHasHearRumor = true;
+                    itr.remove();
+                    break;
+                }
+            }
+        }
+   
+
+        System.out.println("Movendo jogador " + p.toString());
         int opt = -1;
-        while (opt < 1 || opt > 4) {
-            System.out.print("Digite a opção: ");
-            opt = this.scanner.nextInt();
-            System.out.println();
+
+        if (playerHasHearRumor) {
+            System.out.println("Jogador possui o item 'Ouvir um boato'," +
+                    " movendo para posição aleatória...");
+
+            Random random = new Random();
+            opt = random.nextInt(1, 5);
+        } else {
+            System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
+
+            while (opt < 1 || opt > 4) {
+                System.out.print("Digite a opção: ");
+                opt = this.scanner.nextInt();
+                System.out.println();
+            }
         }
 
         Position pos = p.getPosition(), newPos;
@@ -150,6 +173,8 @@ public class Game {
 
             this.board[newPos.getX()][newPos.getY()] = p;
             p.setPosition(newPos);
+
+            this.createRandomItem();
         }
 
         return true;
@@ -208,22 +233,25 @@ public class Game {
 
         return;
     }
+
+    private void createRandomItem() {
+        Random random = new Random();
+        Position pos = getRandomEmptyPosition(0, Game.BOARD_SIZE);
+
+        int k = random.nextInt(ItemType.values().length);
+        ItemType type = ItemType.values()[k]; 
+
+        this.board[pos.getX()][pos.getY()] = ItemFactory.createItem(
+            pos,
+            type
+        );
+
+        return;
+    }
     
     private void initializeItems() {
-        Random random = new Random();
-        ItemType type;
-        Position pos;
-
         for (int i = 0; i < Game.NUMBER_OF_ITEMS; i++) {
-            pos = getRandomEmptyPosition(0, Game.BOARD_SIZE);
-
-            int k = random.nextInt(ItemType.values().length);
-            type = ItemType.values()[k]; 
-
-            this.board[pos.getX()][pos.getY()] = ItemFactory.createItem(
-                pos,
-                type
-            );
+            this.createRandomItem();
         }
 
         return;
