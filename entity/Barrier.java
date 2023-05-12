@@ -1,3 +1,7 @@
+package entity;
+
+import utils.*;
+
 public class Barrier extends Entity {
     private static final String color = Colors.ANSI_WHITE;
 

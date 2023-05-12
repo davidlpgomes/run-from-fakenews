@@ -1,12 +1,17 @@
-public class ItemHearRumor extends Entity implements ItemInterface {
+package entity.item;
+
+import entity.*;
+import utils.*;
+
+public class Item extends Entity {
     private static final String color = Colors.ANSI_YELLOW;
 
-    public ItemHearRumor(Position position) {
+    public Item(Position position) {
         this.setPosition(position);
     }
 
     public String getColor() {
-        return ItemHearRumor.color;
+        return Item.color;
     }
 
     public String toString() {

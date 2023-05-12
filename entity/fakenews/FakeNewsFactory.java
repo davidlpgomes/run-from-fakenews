@@ -1,3 +1,7 @@
+package entity.fakenews;
+
+import entity.*;
+
 public class FakeNewsFactory {
     public static Entity createFakeNews(Position position, FakeNewsType type) {
         switch (type) {

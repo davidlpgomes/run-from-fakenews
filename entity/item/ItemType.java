@@ -1,3 +1,5 @@
+package entity.item;
+
 public enum ItemType {
     REPORT_FAKE_NEWS,
     RUN_AWAY,

@@ -1,3 +1,7 @@
+package entity;
+
+import utils.*;
+
 public class Player extends Entity {
     private static final String color = Colors.ANSI_GREEN;
     private static int lastId = 0;

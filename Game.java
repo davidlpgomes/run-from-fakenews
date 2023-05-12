@@ -1,5 +1,10 @@
 import java.util.Random;
 
+import entity.*;
+import entity.fakenews.*;
+import entity.item.*;
+import utils.*;
+
 public class Game {
     private static final int BOARD_SIZE = 9;
     private static final int NUMBER_OF_BARRIERS = 4;

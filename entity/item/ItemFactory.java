@@ -1,3 +1,7 @@
+package entity.item;
+
+import entity.*;
+
 public class ItemFactory {
     public static Entity createItem(Position position, ItemType type){
         switch (type) {
