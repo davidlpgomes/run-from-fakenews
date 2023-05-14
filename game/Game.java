@@ -18,6 +18,7 @@ public class Game {
     private static final int MAX_TURNS = 20;
 
     private Board board;
+    private History history;
     private ArrayList<Player> playerList;
     private ArrayList<FakeNews> fakeNewsList;
 
@@ -28,6 +29,7 @@ public class Game {
     public Game() {
         this.turns = MAX_TURNS;
         this.board = new Board(Game.BOARD_SIZE);
+        this.history = new History(Game.BOARD_SIZE);
         this.playerList = new ArrayList<Player>();
         this.fakeNewsList = new ArrayList<FakeNews>();
 
@@ -60,7 +62,7 @@ public class Game {
             this.turns > 0 &&
             (this.playerList.size() > 0 || this.fakeNewsList.size() > 0)
         ) {
-            this.board.printBoard();
+            this.board.printBoard(this.history);
 
             ListIterator<Player> itr = this.playerList.listIterator();
             while (itr.hasNext()) {
@@ -131,9 +133,10 @@ public class Game {
             }
         }
 
+        this.history.add(String.format("%s -> %s.", p.toString(), possibleMoves.get(opt-1).getDirection()));
         boolean status = this.movePlayerToNewPos(p, possibleMoves.get(opt-1));
 
-        this.board.printBoard();
+        this.board.printBoard(this.history);
 
         return status;
     }

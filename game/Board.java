@@ -107,7 +107,7 @@ public class Board{
         System.out.flush();
     }
 
-    public void printBoard(){
+    public void printBoard(History history){
         this.refreshScreen();
 
         this.printBoardSeparator();
@@ -128,6 +128,10 @@ public class Board{
                     System.out.print("    |");
                 }
             }
+
+            //PRINT HISTORY
+            if(history.get(i) != null)
+                System.out.printf("  ● %s", history.get(i));
 
             System.out.println();
             this.printBoardSeparator();
