@@ -75,6 +75,7 @@ public class Game {
         return;
     }
 
+
     private boolean movePlayer(Player p) {
         boolean playerHasHearRumor = false;
 
@@ -92,6 +93,8 @@ public class Game {
         System.out.println("Movendo jogador " + p.toString());
         int opt = -1;
 
+        ArrayList<PossibleMove> possibleMoves = p.getPossibleMoves(this.board);
+
         if (playerHasHearRumor) {
             System.out.println("Jogador possui o item 'Ouvir um boato'," +
                     " movendo para posição aleatória...");
@@ -101,60 +104,35 @@ public class Game {
         } else {
             // System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
 
-            ArrayList<Position> possibleMoves = p.getPossibleMoves(this.board);
 
 
-            if(possibleMoves.size() > 0){
-              System.out.println("Possiveis movimentos:");
+            if (possibleMoves.size() > 0) {
+            //   System.out.println("Possiveis movimentos:");
 
               for(int i = 0; i < possibleMoves.size(); i++){
-                System.out.println(possibleMoves.get(i).toString());
+                System.out.printf("%d) %5s\n", i+1, possibleMoves.get(i).getDirection());
               }
+
+              System.out.println();
+            } else {
+                System.out.println("SEM MOVIMENTOS.");
             }
-            
 
-            System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
-
-            while (opt < 1 || opt > 4) {
-                System.out.print("Digite a opção: ");
-                opt = this.scanner.nextInt();
-                System.out.println();
+            while (opt < 1 || opt > possibleMoves.size()) {
+                try {
+                    System.out.print("Digite a opção: ");
+                    opt = this.scanner.nextInt();
+                    System.out.println();
+                }
+                catch (Exception e) {
+                    System.out.println(Colors.ANSI_RED + "Opcao invalida." + Colors.ANSI_RESET);
+                    this.scanner.nextLine();
+                }
             }
         }
 
-        Position pos = p.getPosition(), newPos;
-        boolean status = true;
+        boolean status = this.movePlayerToNewPos(p, possibleMoves.get(opt-1));
 
-        if (opt == 1) {
-            if (pos.getX() - 1 < 0) {
-                // TODO: Fora do tabuleiro, jogador morre?
-            } else {
-                newPos = new Position(pos.getX() - 1, pos.getY());
-                status = this.movePlayerToNewPos(p, newPos);
-            }
-        } else if (opt == 2) {
-            if (pos.getX() + 1 >= this.BOARD_SIZE) {
-                // TODO: Fora do tabuleiro, jogador morre?
-            } else {
-                newPos = new Position(pos.getX() + 1, pos.getY());
-                status = this.movePlayerToNewPos(p, newPos);
-            }
-        } else if (opt == 3) {
-            if (pos.getY() - 1 >= this.BOARD_SIZE) {
-                // TODO: Fora do tabuleiro, jogador morre?
-            } else {
-                newPos = new Position(pos.getX(), pos.getY() - 1);
-                status = this.movePlayerToNewPos(p, newPos);
-            }
-        } else if (opt == 4) {
-            if (pos.getY() + 1 < 0) {
-                // TODO: Fora do tabuleiro, jogador morre?
-            } else {
-                newPos = new Position(pos.getX(), pos.getY() + 1);
-                status = this.movePlayerToNewPos(p, newPos);
-            }
-        }
-               
         this.board.printBoard();
 
         return status;

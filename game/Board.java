@@ -102,8 +102,14 @@ public class Board{
         return;
     }
 
+    private void refreshScreen(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
     public void printBoard(){
+        this.refreshScreen();
+
         this.printBoardSeparator();
 
         for (int i = 0; i < this.boardSize; i++) {
