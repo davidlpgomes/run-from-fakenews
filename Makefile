@@ -1,16 +1,14 @@
 JFLAGS = -g
 JC = javac
-C=$(`find . -type f | grep .class`)
 
 .SUFFIXES: .java .class
 
-.java.class:
-	@$(JC) $(JFLAGS) $*.java
-
+.java.class: 
+	$(JC) $(JFLAGS) $*.java
 
 CLASSES = Main.java 
 
-default: classes
+default: clean classes
 	@java Main
 
 classes: $(CLASSES:.java=.class)

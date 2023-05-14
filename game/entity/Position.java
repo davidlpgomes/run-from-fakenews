@@ -34,6 +34,6 @@ public class Position {
     }
 
     public String toString(){
-        return String.format("Position: (%d, %d)", this.x, this.y);
+        return String.format("Position: (x:%d, y:%d)", this.x, this.y);
     }
 }

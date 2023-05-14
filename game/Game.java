@@ -101,9 +101,8 @@ public class Game {
         } else {
             // System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
 
-            ArrayList<Position> possibleMoves = new ArrayList<Position>(4);
+            ArrayList<Position> possibleMoves = p.getPossibleMoves(this.board);
 
-            possibleMoves.add(new Position(0,0));
 
             if(possibleMoves.size() > 0){
               System.out.println("Possiveis movimentos:");
