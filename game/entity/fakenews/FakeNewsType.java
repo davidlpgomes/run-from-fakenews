@@ -1,4 +1,4 @@
-package entity.fakenews;
+package game.entity.fakenews;
 
 public enum FakeNewsType {
     ONE_SQUARE,

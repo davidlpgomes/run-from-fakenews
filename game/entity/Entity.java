@@ -1,4 +1,4 @@
-package entity;
+package game.entity;
 
 public abstract class Entity {
     private Position position;

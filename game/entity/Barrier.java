@@ -1,6 +1,6 @@
-package entity;
+package game.entity;
 
-import utils.*;
+import game.utils.*;
 
 public class Barrier extends Entity {
     private static final String color = Colors.ANSI_WHITE;

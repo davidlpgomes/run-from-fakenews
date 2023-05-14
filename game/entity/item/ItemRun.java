@@ -1,6 +1,6 @@
-package entity.item;
+package game.entity.item;
 
-import entity.*;
+import game.entity.*;
 
 public class ItemRun extends Item {
     public ItemRun(Position position) {

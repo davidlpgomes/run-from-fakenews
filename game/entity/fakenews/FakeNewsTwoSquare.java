@@ -1,6 +1,6 @@
-package entity.fakenews;
+package game.entity.fakenews;
 
-import entity.*;
+import game.entity.*;
 
 public class FakeNewsTwoSquare extends FakeNews {
     public FakeNewsTwoSquare(Position position) {

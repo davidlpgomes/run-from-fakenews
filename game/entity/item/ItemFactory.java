@@ -1,6 +1,6 @@
-package entity.item;
+package game.entity.item;
 
-import entity.*;
+import game.entity.*;
 
 public class ItemFactory {
     public static Item createItem(Position position, ItemType type){

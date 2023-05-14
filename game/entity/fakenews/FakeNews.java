@@ -1,7 +1,7 @@
-package entity.fakenews;
+package game.entity.fakenews;
 
-import entity.*;
-import utils.*;
+import game.entity.*;
+import game.utils.*;
 
 public abstract class FakeNews extends Entity {
     private static final String color = Colors.ANSI_RED;

@@ -1,7 +1,7 @@
-package entity.item;
+package game.entity.item;
 
-import entity.*;
-import utils.*;
+import game.entity.*;
+import game.utils.*;
 
 public abstract class Item extends Entity {
     private static final String color = Colors.ANSI_YELLOW;

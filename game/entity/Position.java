@@ -1,4 +1,4 @@
-package entity;
+package game.entity;
 
 public class Position {
     private int x;
@@ -31,5 +31,9 @@ public class Position {
 
         this.y = y;
         return;
+    }
+
+    public String toString(){
+        return String.format("Position: (%d, %d)", this.x, this.y);
     }
 }

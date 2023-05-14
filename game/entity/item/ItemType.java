@@ -1,4 +1,4 @@
-package entity.item;
+package game.entity.item;
 
 public enum ItemType {
     REPORT_FAKE_NEWS,

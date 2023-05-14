@@ -1,6 +1,6 @@
-package entity.fakenews;
+package game.entity.fakenews;
 
-import entity.*;
+import game.entity.*;
 
 public class FakeNewsFactory {
     public static FakeNews createFakeNews(Position position, FakeNewsType type) {

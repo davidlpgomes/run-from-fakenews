@@ -1,9 +1,9 @@
-package entity;
+package game.entity;
 
 import java.util.ArrayList;
 
-import entity.item.*;
-import utils.*;
+import game.entity.item.*;
+import game.utils.*;
 
 public class Player extends Entity {
     private static final String color = Colors.ANSI_GREEN;
@@ -35,6 +35,12 @@ public class Player extends Entity {
     public void setItems(ArrayList<Item> items) {
         this.items = items;
     }
+
+    //Methods
+
+    // public ArrayList<Position> getPossibleMoves(Board board){
+    //     return 
+    // }
 
     public String toString() {
         return "J" + this.id;

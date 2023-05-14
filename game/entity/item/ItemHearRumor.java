@@ -1,6 +1,6 @@
-package entity.item;
+package game.entity.item;
 
-import entity.*;
+import game.entity.*;
 
 public class ItemHearRumor extends Item {
     public ItemHearRumor(Position position) {
