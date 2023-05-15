@@ -20,6 +20,10 @@ public class PossibleMove extends Position {
             case "Sul":
             case "Leste":
             case "Oeste":
+            case "Noroeste":
+            case "Nordeste":
+            case "Sudeste":
+            case "Sudoeste":
                 break;
             default:
                 return;
@@ -28,7 +32,7 @@ public class PossibleMove extends Position {
         this.direction = direction;
         return;
     }
-    
+
     public String toString(){
         return String.format("Vai para o %5s: (x:%d, y:%d)", this.direction, this.x, this.y);
     }
