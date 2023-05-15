@@ -1,12 +1,24 @@
 package game.entity;
 
 public class Position {
+    protected boolean valid;
+
     protected int x;
     protected int y;
 
     public Position(int x, int y) {
+        this.setValid(true);
         this.setX(x);
         this.setY(y);
+    }
+
+    public boolean isValid() {
+        return this.valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+        return;
     }
 
     public int getX() {
@@ -15,7 +27,7 @@ public class Position {
 
     public void setX(int x) {
         if (x < 0)
-            return;
+            this.setValid(false);
 
         this.x = x;
         return;
@@ -27,7 +39,7 @@ public class Position {
 
     public void setY(int y) {
         if (y < 0)
-            return;
+            this.setValid(false);
 
         this.y = y;
         return;

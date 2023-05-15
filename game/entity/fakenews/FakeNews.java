@@ -1,9 +1,12 @@
 package game.entity.fakenews;
 
+import java.util.ArrayList;
+
+import game.*;
 import game.entity.*;
 import game.utils.*;
 
-public abstract class FakeNews extends EntityMovable {
+public abstract class FakeNews extends Entity {
     private static final String color = Colors.ANSI_RED;
 
     public FakeNews(Position position) {
@@ -13,4 +16,8 @@ public abstract class FakeNews extends EntityMovable {
     public String getColor() {
         return this.color;
     }
+
+    public abstract FakeNewsType getType();
+
+    public abstract ArrayList<PossibleMove> getPossibleMoves(Board board);
 }
