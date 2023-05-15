@@ -1,5 +1,6 @@
 package game;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import game.entity.*;
@@ -10,30 +11,32 @@ import game.utils.*;
 public class Board {
 
     private Entity[][] board;
-    private int boardSize;
+    private int size;
 
-    public Board(int boardSize){
-        this.setBoardSize(boardSize);
-        this.setBoard(new Entity[boardSize][boardSize]);
+    public Board(int size){
+        this.setSize(size);
+        this.setBoard(new Entity[size][size]);
     }
 
     public Entity[][] getBoard() {
         return this.board;
     }
 
-    public int getBoardSize() {
-        return this.boardSize;
-    }
-
     public void setBoard(Entity[][] board) {
         this.board = board;
+        return;
     }
 
-    public void setBoardSize(int boardSize) {
-        if(boardSize < 0)
+    public int getSize() {
+        return this.size;
+    }
+
+    public void setSize(int size) {
+        if (size < 0)
             return;
 
-        this.boardSize = boardSize;
+        this.size = size;
+        return;
     }
 
     public Entity getPosition(Position position){
@@ -46,22 +49,27 @@ public class Board {
 
     public void setPosition(Position position){
         this.board[position.getX()][position.getY()] = null;
+        return;
     }
 
     public void setPosition(int x, int y){
         this.board[x][y] = null;
+        return;
     }
 
     public void setPosition(Position position, Entity entity){
         this.board[position.getX()][position.getY()] = entity;
+        return;
     }
 
     public void setPosition(int x, int y, Entity entity){
         this.board[x][y] = entity;
+        return;
     }
 
     public void setPosition(Entity entity){
-        this.board[entity.getPosition().getX()][entity.getPosition().getY()] = entity;
+        this.setPosition(entity.getPosition(), entity);
+        return;
     }
 
     public Position getRandomEmptyPosition(int lowerBound, int upperBound) {
@@ -83,17 +91,84 @@ public class Board {
         return new Position(x, y);
     }
 
+    public Position getRandomEmptyAdjacentPosition(Position pos) {
+        ArrayList<Position> possiblePositions = new ArrayList<Position>();
+
+        int x = pos.getX();
+        int y = pos.getY();
+        int s = this.getSize();
+
+        // North
+        if (x - 1 >= 0 && this.getPosition(x - 1, y) == null)
+            possiblePositions.add(new Position(x - 1, y));
+
+        // South
+        if (x + 1 < s && this.getPosition(x + 1, y) == null)
+            possiblePositions.add(new Position(x + 1, y));
+
+        // West
+        if (y - 1 >= 0 && this.getPosition(x, y - 1) == null)
+            possiblePositions.add(new Position(x, y - 1));
+
+        // East
+        if (y + 1 < s && this.getPosition(x, y + 1) == null)
+            possiblePositions.add(new Position(x, y + 1));
+
+        // Northwest
+        if (x - 1 >= 0 && y - 1 >= 0 && this.getPosition(x - 1, y - 1) == null)
+            possiblePositions.add(new Position(x - 1, y - 1));
+
+        // Northeast
+        if (x - 1 >= 0 && y + 1 < s && this.getPosition(x - 1, y + 1) == null)
+            possiblePositions.add(new Position(x - 1, y + 1));
+
+        // Southwest
+        if (x + 1 < s && y - 1 >= 0 && this.getPosition(x + 1, y - 1) == null)
+            possiblePositions.add(new Position(x + 1, y - 1));
+
+        // Southeast
+        if (x + 1 < s && y + 1 < s && this.getPosition(x + 1, y + 1) == null)
+            possiblePositions.add(new Position(x + 1, y + 1));
+
+        Random random = new Random();
+        int i = random.nextInt(possiblePositions.size());
+
+        return possiblePositions.get(i);
+    }
+
+    public boolean isPosBarrier(int x, int y) {
+        int s = this.getSize();
+
+        boolean isBarrier = false;
+
+        if (
+            x >= 0 && x < s && y >= 0 && y < s &&
+            this.getPosition(x, y) instanceof Barrier
+        )
+            isBarrier = true;
+
+        return isBarrier;
+    }
+
+    public boolean isPosBarrier(Position pos) {
+        return this.isPosBarrier(pos.getX(), pos.getY());
+    }
+
     public String getBoardCoordByPosition(Position pos) {
         char col = (char) (65 + pos.getY());
-        int line = this.getBoardSize() - pos.getX();
+        int line = this.getSize() - pos.getX();
 
         return String.format("%c%d", col, line);
+    }
+
+    public String getBoardCoordByPosition(Entity entity) {
+        return this.getBoardCoordByPosition(entity.getPosition());
     }
 
     private void printBoardSeparator() {
         System.out.print("  +");
 
-        for (int i = 0; i < this.boardSize; i++) {
+        for (int i = 0; i < this.getSize(); i++) {
             System.out.print("----+");
         }
 
@@ -112,10 +187,10 @@ public class Board {
 
         this.printBoardSeparator();
 
-        for (int i = 0; i < this.boardSize; i++) {
-            System.out.printf("%d |", this.boardSize - i);
+        for (int i = 0; i < this.getSize(); i++) {
+            System.out.printf("%d |", this.getSize() - i);
 
-            for (int j = 0; j < this.boardSize; j++) {
+            for (int j = 0; j < this.getSize(); j++) {
                 if (this.board[i][j] != null) {
                     System.out.print(
                         " " + 
@@ -138,7 +213,7 @@ public class Board {
         }
 
         System.out.print("    ");
-        for (int i = 65; i < this.boardSize + 65; i++)
+        for (int i = 65; i < this.getSize() + 65; i++)
             System.out.printf("%c    ", i);
 
         System.out.println("\n");
