@@ -21,6 +21,7 @@ public class Game {
     private History history;
     private ArrayList<Player> playerList;
     private ArrayList<FakeNews> fakeNewsList;
+    private FakeNews tempFakeNews;
 
     private Scanner scanner;
 
@@ -78,10 +79,14 @@ public class Game {
                 if (!this.moveFakeNews(fItr.next()))
                     fItr.remove();
 
+                if (this.tempFakeNews != null) {
+                    fItr.add(tempFakeNews);
+                    this.tempFakeNews = null;
+                }
+
                 Sleep.sleep(3);
                 this.board.printBoard(this.history);
             }
-
 
             this.turns--;
         }
@@ -209,7 +214,11 @@ public class Game {
         PossibleMove move = possibleMoves.get(opt);
         boolean status = true;
 
-        if (move.isValid()) {
+        if (
+            move.isValid() &&
+            move.getX() < this.board.getSize() &&
+            move.getY() < this.board.getSize()
+        ) {
             this.history.add(
                 String.format("%s: %s -> %s (%s)",
                     fn.toString(),
@@ -227,6 +236,11 @@ public class Game {
                     this.board.getBoardCoordByPosition(fn),
                     move.getDirection()
                 )
+            );
+
+            System.out.printf(
+                "Fake news %s se moveu para fora do tabuleiro e morreu!",
+                fn.toString()
             );
 
             this.board.setPosition(fn.getPosition());
@@ -275,6 +289,7 @@ public class Game {
         } else if (before instanceof Item) {
             fn.setPosition(newPos);
             this.board.setPosition(fn);
+            this.createRandomItem();
 
             FakeNewsType type = fn.getType();
             Position newFnPos = this.board.getRandomEmptyAdjacentPosition(
@@ -282,7 +297,8 @@ public class Game {
             );
 
             FakeNews newFn = FakeNewsFactory.createFakeNews(newFnPos, type);
-            this.fakeNewsList.add(newFn);
+            this.board.setPosition(newFn);
+            this.tempFakeNews = newFn;
         }
 
         return status;
