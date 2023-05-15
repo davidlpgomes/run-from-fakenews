@@ -147,41 +147,50 @@ public class Game {
             opt--;
         }
 
-        PossibleMove move = possibleMoves.get(opt);
-
-        this.history.add(
-            String.format("%s: %s -> %s (%s)",
-                p.toString(),
-                this.board.getBoardCoordByPosition(p),
-                this.board.getBoardCoordByPosition(move),
-                move.getDirection()
-            )
-        );
-
-        boolean status = this.movePlayerToNewPos(p, move);
-
-        return status;
+        return this.movePlayerToNewPos(p, possibleMoves.get(opt));
     }
 
-    private boolean movePlayerToNewPos(Player p, Position newPos) {
+    private boolean movePlayerToNewPos(Player p, PossibleMove newPos) {
         Position pos = p.getPosition();
-
         Entity before = this.board.getPosition(newPos);
 
         this.board.setPosition(pos);
 
         if (before == null) {
+            this.history.add(String.format("%s: %s -> %s (%s)",
+                p.toString(),
+                this.board.getBoardCoordByPosition(p),
+                this.board.getBoardCoordByPosition(newPos),
+                newPos.getDirection()
+            ));
+
             p.setPosition(newPos);
             this.board.setPosition(p);
+
+            return true;
         } else if (before instanceof FakeNews) {
             System.out.printf(
                 "Jogador %s se moveu a uma posição com Fake News e morreu!",
                 p.toString()
             );
 
+            this.history.add(Colors.ANSI_RED + String.format("%s: %s -> %s (%s)",
+                p.toString(),
+                this.board.getBoardCoordByPosition(p),
+                this.board.getBoardCoordByPosition(newPos),
+                newPos.getDirection()
+            ) + Colors.ANSI_RESET);
+
             Sleep.sleep(2);
             return false;
         } else if (before instanceof Item) {
+            this.history.add(Colors.ANSI_GREEN + String.format("%s: %s -> %s (%s)",
+                p.toString(),
+                this.board.getBoardCoordByPosition(p),
+                this.board.getBoardCoordByPosition(newPos),
+                newPos.getDirection()
+            ) + Colors.ANSI_RESET);
+
             ArrayList<Item> playerItems = p.getItems();
             playerItems.add((Item) before);
             p.setItems(playerItems);
@@ -190,6 +199,8 @@ public class Game {
             this.board.setPosition(p);
 
             this.createRandomItem();
+
+            return true;
         }
 
         return true;
@@ -219,15 +230,6 @@ public class Game {
             move.getX() < this.board.getSize() &&
             move.getY() < this.board.getSize()
         ) {
-            this.history.add(
-                String.format("%s: %s -> %s (%s)",
-                    fn.toString(),
-                    this.board.getBoardCoordByPosition(fn),
-                    this.board.getBoardCoordByPosition(move),
-                    move.getDirection()
-                )
-            );
-
             status = this.moveFakeNewsToNewPos(fn, move);
         } else {
             this.history.add(
@@ -250,7 +252,7 @@ public class Game {
         return status;
     }
 
-    private boolean moveFakeNewsToNewPos(FakeNews fn, Position newPos) {
+    private boolean moveFakeNewsToNewPos(FakeNews fn, PossibleMove newPos) {
         boolean status = true;
 
         Position pos = fn.getPosition();
@@ -259,6 +261,15 @@ public class Game {
         this.board.setPosition(pos);
 
         if (before == null) {
+            this.history.add(
+                String.format("%s: %s -> %s (%s)",
+                    fn.toString(),
+                    this.board.getBoardCoordByPosition(fn),
+                    this.board.getBoardCoordByPosition(newPos),
+                    newPos.getDirection()
+                )
+            );
+
             fn.setPosition(newPos);
             this.board.setPosition(fn);
 
@@ -268,6 +279,17 @@ public class Game {
                 this.board.getBoardCoordByPosition(newPos)
             );
         } else if (before instanceof Player) {
+            this.history.add(
+                Colors.ANSI_RED + 
+                String.format("%s: %s -> %s (%s)",
+                    fn.toString(),
+                    this.board.getBoardCoordByPosition(fn),
+                    this.board.getBoardCoordByPosition(newPos),
+                    newPos.getDirection()
+                ) 
+                + Colors.ANSI_RESET
+            );
+
             Player p = (Player) before;
             this.playerList.remove(p);
 
@@ -282,11 +304,31 @@ public class Game {
         } else if (before instanceof FakeNews) {
             status = false;
 
+            this.history.add(
+                String.format("%s: %s -> %s (%s)",
+                    fn.toString(),
+                    this.board.getBoardCoordByPosition(fn),
+                    this.board.getBoardCoordByPosition(newPos),
+                    newPos.getDirection()
+                )
+            );
+
             System.out.printf(
                 "Fake news %s se moveu a uma posição com outra fake news e morreu!",
                 fn.toString()
             );
         } else if (before instanceof Item) {
+            this.history.add(
+                Colors.ANSI_YELLOW + 
+                String.format("%s: %s -> %s (%s)",
+                    fn.toString(),
+                    this.board.getBoardCoordByPosition(fn),
+                    this.board.getBoardCoordByPosition(newPos),
+                    newPos.getDirection()
+                ) 
+                + Colors.ANSI_RESET
+            );
+
             fn.setPosition(newPos);
             this.board.setPosition(fn);
             this.createRandomItem();
