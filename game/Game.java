@@ -64,10 +64,16 @@ public class Game {
         ) {
             this.board.printBoard(this.history);
 
-            ListIterator<Player> itr = this.playerList.listIterator();
-            while (itr.hasNext()) {
-                if(!this.movePlayer(itr.next()))
-                    itr.remove();
+            ListIterator<Player> pItr = this.playerList.listIterator();
+            while (pItr.hasNext()) {
+                if(!this.movePlayer(pItr.next()))
+                    pItr.remove();
+            }
+
+            ListIterator<FakeNews> fItr = this.fakeNewsList.listIterator();
+            while (fItr.hasNext()) {
+                if (!this.moveFakeNews(fItr.next()))
+                    fItr.remove();
             }
 
 
@@ -92,49 +98,57 @@ public class Game {
             }
         }
 
-        System.out.println("Movendo jogador " + p.toString());
+        System.out.println("--- Movendo jogador " + p.toString());
         int opt = -1;
 
         ArrayList<PossibleMove> possibleMoves = p.getPossibleMoves(this.board);
+
+        if (possibleMoves.size() == 0) {
+            System.out.println("Sem movimentos disponíveis...");
+            return true;
+        }
 
         if (playerHasHearRumor) {
             System.out.println("Jogador possui o item 'Ouvir um boato'," +
                     " movendo para posição aleatória...");
 
             Random random = new Random();
-            opt = random.nextInt(1, 5);
+            opt = random.nextInt(possibleMoves.size());
         } else {
-            // System.out.println("1) Norte  2) Sul  3) Oeste  4) Leste");
+            for(int i = 0; i < possibleMoves.size(); i++)
+                System.out.printf("%d) %5s\n", 
+                    i + 1, possibleMoves.get(i).getDirection());
 
-
-
-            if (possibleMoves.size() > 0) {
-            //   System.out.println("Possiveis movimentos:");
-
-              for(int i = 0; i < possibleMoves.size(); i++){
-                System.out.printf("%d) %5s\n", i+1, possibleMoves.get(i).getDirection());
-              }
-
-              System.out.println();
-            } else {
-                System.out.println("SEM MOVIMENTOS.");
-            }
+            System.out.println();
 
             while (opt < 1 || opt > possibleMoves.size()) {
                 try {
                     System.out.print("Digite a opção: ");
                     opt = this.scanner.nextInt();
                     System.out.println();
-                }
-                catch (Exception e) {
-                    System.out.println(Colors.ANSI_RED + "Opcao invalida." + Colors.ANSI_RESET);
+                } catch (Exception e) {
+                    System.out.println(
+                        Colors.ANSI_RED + "Opção inválida!" +
+                        Colors.ANSI_RESET);
                     this.scanner.nextLine();
                 }
             }
+
+            opt--;
         }
 
-        this.history.add(String.format("%s -> %s.", p.toString(), possibleMoves.get(opt-1).getDirection()));
-        boolean status = this.movePlayerToNewPos(p, possibleMoves.get(opt-1));
+        PossibleMove move = possibleMoves.get(opt);
+
+        this.history.add(
+            String.format("%s: %s -> %s (%s)",
+                p.toString(),
+                this.board.getBoardCoordByPosition(p.getPosition()),
+                this.board.getBoardCoordByPosition(move),
+                move.getDirection()
+            )
+        );
+
+        boolean status = this.movePlayerToNewPos(p, move);
 
         this.board.printBoard(this.history);
 
@@ -150,12 +164,15 @@ public class Game {
         this.board.setPosition(pos);
 
         if (before == null) {
-            // this.board[newPos.getX()][newPos.getY()] = p;
             p.setPosition(newPos);
             this.board.setPosition(p);
-
         } else if (before instanceof FakeNews) {
-            //TODO: Aqui o jogador morre.
+            System.out.printf(
+                "Jogador %s se moveu a uma posição com Fake News e morreu!",
+                p.toString()
+            );
+
+            Sleep.sleep(2);
             return false;
         } else if (before instanceof Item) {
             ArrayList<Item> playerItems = p.getItems();
@@ -164,7 +181,6 @@ public class Game {
 
             p.setPosition(newPos);
             this.board.setPosition(p);
-            // this.board[newPos.getX()][newPos.getY()] = p;
 
             this.createRandomItem();
         }
@@ -172,32 +188,14 @@ public class Game {
         return true;
     }
 
+    private boolean moveFakeNews(FakeNews fn) {
+    
+        return true;
+    }
+
     private void initializePlayers() {
-        // int last = Game.BOARD_SIZE - 1;
-        // int middle = Game.BOARD_SIZE / 2;
         int last = this.board.getBoardSize() - 1;
         int middle = this.board.getBoardSize() / 2;
-
-
-        // // Player p1 = new Player(new Position(0, middle));
-        // this.playerList.add(p1);
-        // // this.board[0][middle] = p1;
-        // this.board.setPosition(p1);
-
-        // Player p2 = new Player(new Position(middle, last));
-        // this.playerList.add(p2);
-        // // this.board[middle][last] = p2;
-        // this.board.setPosition(p2);
-
-        // Player p3 = new Player(new Position(last, middle));
-        // this.playerList.add(p3);
-        // // this.board[last][middle] = p3;
-        // this.board.setPosition(p3);
-
-        // Player p4 = new Player(new Position(middle, 0));
-        // this.playerList.add(p4);
-        // // this.board[middle][0] = p4;
-        // this.board.setPosition(p4);
 
         this.playerList.add(new Player(new Position(0, middle)));
         this.playerList.add(new Player(new Position(middle, last)));
@@ -211,14 +209,22 @@ public class Game {
     }
 
     private void initializeFakeNews() {
-        // FakeNewsType type;
-        // Position pos;
+        Position pos;
 
         int numberOfTypes = FakeNewsType.values().length;
 
         for (int i = 0; i < numberOfTypes; i++) {
             for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
-                FakeNews fn = FakeNewsFactory.createFakeNews(this.board.getRandomEmptyPosition(1), FakeNewsType.values()[i]);
+                pos = this.board.getRandomEmptyPosition(
+                    1,
+                    this.board.getBoardSize() - 1
+                );
+
+                FakeNews fn = FakeNewsFactory.createFakeNews(
+                    pos,
+                    FakeNewsType.values()[i]
+                );
+
                 this.fakeNewsList.add(fn);
             }
         }
@@ -230,8 +236,13 @@ public class Game {
     }
 
     private void initializeBarriers() {
-        for (int i = 0; i < Game.NUMBER_OF_BARRIERS; i++)
-            this.board.setPosition(new Barrier(this.board.getRandomEmptyPosition(0)));
+        Position pos;
+
+        for (int i = 0; i < Game.NUMBER_OF_BARRIERS; i++) {
+            pos = this.board.getRandomEmptyPosition(
+                    0, this.board.getBoardSize());
+            this.board.setPosition(new Barrier(pos));
+        }
 
         return;
     }
@@ -239,8 +250,13 @@ public class Game {
     private void createRandomItem() {
         Random random = new Random();
 
-        ItemType type = ItemType.values()[random.nextInt(ItemType.values().length)]; 
-        Item item = ItemFactory.createItem(this.board.getRandomEmptyPosition(0), type);
+        Position pos = this.board.getRandomEmptyPosition(
+                0, this.board.getBoardSize());
+
+        ItemType type = ItemType.values()[random.nextInt(
+                ItemType.values().length)]; 
+
+        Item item = ItemFactory.createItem(pos, type);
         this.board.setPosition(item);
 
         return;
