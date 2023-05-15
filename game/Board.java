@@ -64,7 +64,7 @@ public class Board {
         this.board[entity.getPosition().getX()][entity.getPosition().getY()] = entity;
     }
 
-    public Position getRandomEmptyPosition(int margin) {
+    public Position getRandomEmptyPosition(int lowerBound, int upperBound) {
         Random random = new Random();
 
         int x = -1;
@@ -73,14 +73,21 @@ public class Board {
         boolean found = false;
 
         while (!found) {
-            x = random.nextInt(this.getBoardSize() - margin) + margin;
-            y = random.nextInt(this.getBoardSize() - margin) + margin;
+            x = random.nextInt(upperBound - lowerBound) + lowerBound;
+            y = random.nextInt(upperBound - lowerBound) + lowerBound;
 
             if (this.board[x][y] == null)
                 found = true;
         }
 
         return new Position(x, y);
+    }
+
+    public String getBoardCoordByPosition(Position pos) {
+        char col = (char) (65 + pos.getY());
+        int line = this.getBoardSize() - pos.getX();
+
+        return String.format("%c%d", col, line);
     }
 
     private void printBoardSeparator() {
