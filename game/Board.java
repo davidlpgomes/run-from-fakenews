@@ -7,7 +7,7 @@ import game.entity.fakenews.*;
 import game.entity.item.*;
 import game.utils.*;
 
-public class Board{
+public class Board {
 
     private Entity[][] board;
     private int boardSize;
@@ -17,7 +17,6 @@ public class Board{
         this.setBoard(new Entity[boardSize][boardSize]);
     }
 
-    // GETTERS 
     public Entity[][] getBoard() {
         return this.board;
     }
@@ -26,7 +25,6 @@ public class Board{
         return this.boardSize;
     }
 
-    // SETTERS 
     public void setBoard(Entity[][] board) {
         this.board = board;
     }
@@ -38,8 +36,6 @@ public class Board{
         this.boardSize = boardSize;
     }
 
-    // METHODS
-    //getPosition 
     public Entity getPosition(Position position){
         return this.board[position.getX()][position.getY()];
     }
@@ -48,7 +44,6 @@ public class Board{
         return this.board[x][y];
     }
 
-    //setPosition 
     public void setPosition(Position position){
         this.board[position.getX()][position.getY()] = null;
     }
@@ -69,7 +64,6 @@ public class Board{
         this.board[entity.getPosition().getX()][entity.getPosition().getY()] = entity;
     }
 
-    // getRandomPos
     public Position getRandomEmptyPosition(int margin) {
         Random random = new Random();
 
@@ -89,9 +83,8 @@ public class Board{
         return new Position(x, y);
     }
 
-    // print Board
     private void printBoardSeparator() {
-        System.out.print("+");
+        System.out.print("  +");
 
         for (int i = 0; i < this.boardSize; i++) {
             System.out.print("----+");
@@ -113,7 +106,7 @@ public class Board{
         this.printBoardSeparator();
 
         for (int i = 0; i < this.boardSize; i++) {
-            System.out.print("|");
+            System.out.printf("%d |", this.boardSize - i);
 
             for (int j = 0; j < this.boardSize; j++) {
                 if (this.board[i][j] != null) {
@@ -129,13 +122,19 @@ public class Board{
                 }
             }
 
-            //PRINT HISTORY
+            // Prints board's history
             if(history.get(i) != null)
                 System.out.printf("  ● %s", history.get(i));
 
             System.out.println();
             this.printBoardSeparator();
         }
+
+        System.out.print("    ");
+        for (int i = 65; i < this.boardSize + 65; i++)
+            System.out.printf("%c    ", i);
+
+        System.out.println("\n");
 
         return;
     }
