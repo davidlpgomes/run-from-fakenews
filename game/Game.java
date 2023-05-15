@@ -68,12 +68,18 @@ public class Game {
             while (pItr.hasNext()) {
                 if(!this.movePlayer(pItr.next()))
                     pItr.remove();
+
+                Sleep.sleep(2);
+                this.board.printBoard(this.history);
             }
 
             ListIterator<FakeNews> fItr = this.fakeNewsList.listIterator();
             while (fItr.hasNext()) {
                 if (!this.moveFakeNews(fItr.next()))
                     fItr.remove();
+
+                Sleep.sleep(3);
+                this.board.printBoard(this.history);
             }
 
 
@@ -82,7 +88,6 @@ public class Game {
 
         return;
     }
-
 
     private boolean movePlayer(Player p) {
         boolean playerHasHearRumor = false;
@@ -142,15 +147,13 @@ public class Game {
         this.history.add(
             String.format("%s: %s -> %s (%s)",
                 p.toString(),
-                this.board.getBoardCoordByPosition(p.getPosition()),
+                this.board.getBoardCoordByPosition(p),
                 this.board.getBoardCoordByPosition(move),
                 move.getDirection()
             )
         );
 
         boolean status = this.movePlayerToNewPos(p, move);
-
-        this.board.printBoard(this.history);
 
         return status;
     }
@@ -159,7 +162,6 @@ public class Game {
         Position pos = p.getPosition();
 
         Entity before = this.board.getPosition(newPos);
-        System.out.println("Before is " + before);
 
         this.board.setPosition(pos);
 
@@ -189,13 +191,106 @@ public class Game {
     }
 
     private boolean moveFakeNews(FakeNews fn) {
-    
-        return true;
+        System.out.println("--- Movendo fake news " + fn.toString());
+        int opt = -1;
+
+        ArrayList<PossibleMove> possibleMoves = fn.getPossibleMoves(this.board);
+
+        if (possibleMoves.size() == 0) {
+            System.out.println("Sem movimentos disponíveis...");
+
+            Sleep.sleep(2);
+            return true;
+        }
+
+        Random random = new Random();
+        opt = random.nextInt(possibleMoves.size());
+
+        PossibleMove move = possibleMoves.get(opt);
+        boolean status = true;
+
+        if (move.isValid()) {
+            this.history.add(
+                String.format("%s: %s -> %s (%s)",
+                    fn.toString(),
+                    this.board.getBoardCoordByPosition(fn),
+                    this.board.getBoardCoordByPosition(move),
+                    move.getDirection()
+                )
+            );
+
+            status = this.moveFakeNewsToNewPos(fn, move);
+        } else {
+            this.history.add(
+                String.format("%s: %s -> fora do tabuleiro (%s)",
+                    fn.toString(),
+                    this.board.getBoardCoordByPosition(fn),
+                    move.getDirection()
+                )
+            );
+
+            this.board.setPosition(fn.getPosition());
+            status = false;
+        }
+
+        return status;
+    }
+
+    private boolean moveFakeNewsToNewPos(FakeNews fn, Position newPos) {
+        boolean status = true;
+
+        Position pos = fn.getPosition();
+        Entity before = this.board.getPosition(newPos);
+
+        this.board.setPosition(pos);
+
+        if (before == null) {
+            fn.setPosition(newPos);
+            this.board.setPosition(fn);
+
+            System.out.printf(
+                "Fake news %s se moveu para %s.",
+                fn.toString(),
+                this.board.getBoardCoordByPosition(newPos)
+            );
+        } else if (before instanceof Player) {
+            Player p = (Player) before;
+            this.playerList.remove(p);
+
+            fn.setPosition(newPos);
+            this.board.setPosition(fn);
+
+            System.out.printf(
+                "Fake news %s se moveu a uma posição com o jogador %s, que morreu.",
+                fn.toString(),
+                p.toString()
+            );
+        } else if (before instanceof FakeNews) {
+            status = false;
+
+            System.out.printf(
+                "Fake news %s se moveu a uma posição com outra fake news e morreu!",
+                fn.toString()
+            );
+        } else if (before instanceof Item) {
+            fn.setPosition(newPos);
+            this.board.setPosition(fn);
+
+            FakeNewsType type = fn.getType();
+            Position newFnPos = this.board.getRandomEmptyAdjacentPosition(
+                newPos
+            );
+
+            FakeNews newFn = FakeNewsFactory.createFakeNews(newFnPos, type);
+            this.fakeNewsList.add(newFn);
+        }
+
+        return status;
     }
 
     private void initializePlayers() {
-        int last = this.board.getBoardSize() - 1;
-        int middle = this.board.getBoardSize() / 2;
+        int last = this.board.getSize() - 1;
+        int middle = this.board.getSize() / 2;
 
         this.playerList.add(new Player(new Position(0, middle)));
         this.playerList.add(new Player(new Position(middle, last)));
@@ -217,7 +312,7 @@ public class Game {
             for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
                 pos = this.board.getRandomEmptyPosition(
                     1,
-                    this.board.getBoardSize() - 1
+                    this.board.getSize() - 1
                 );
 
                 FakeNews fn = FakeNewsFactory.createFakeNews(
@@ -240,7 +335,7 @@ public class Game {
 
         for (int i = 0; i < Game.NUMBER_OF_BARRIERS; i++) {
             pos = this.board.getRandomEmptyPosition(
-                    0, this.board.getBoardSize());
+                    0, this.board.getSize());
             this.board.setPosition(new Barrier(pos));
         }
 
@@ -251,7 +346,7 @@ public class Game {
         Random random = new Random();
 
         Position pos = this.board.getRandomEmptyPosition(
-                0, this.board.getBoardSize());
+                0, this.board.getSize());
 
         ItemType type = ItemType.values()[random.nextInt(
                 ItemType.values().length)]; 
