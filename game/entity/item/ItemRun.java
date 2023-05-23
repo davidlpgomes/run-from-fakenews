@@ -7,7 +7,11 @@ public class ItemRun extends Item {
         super(position);
     }
 
-    public String getName() {
-        return "Fugir";
+    public ItemType getType() {
+        return ItemType.RUN_AWAY;
+    }
+
+    public ItemMessage getMessage() {
+        return ItemMessage.RUN_AWAY;
     }
 }

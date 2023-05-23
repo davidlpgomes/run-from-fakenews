@@ -22,7 +22,7 @@ public class Player extends Entity {
     }
 
     public String getColor() {
-        return this.color;
+        return Player.color;
     }
 
     public int getId() {

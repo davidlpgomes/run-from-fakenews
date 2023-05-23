@@ -13,8 +13,8 @@ import game.utils.*;
 public class Game {
     private static final int BOARD_SIZE = 9;
     private static final int NUMBER_OF_BARRIERS = 4;
-    private static final int NUMBER_OF_ITEMS = 2;
-    private static final int NUMBER_OF_FN_PER_TYPE = 2;
+    private static final int NUMBER_OF_ITEMS = 22;
+    private static final int NUMBER_OF_FN_PER_TYPE = 3;
     private static final int MAX_TURNS = 20;
 
     private Board board;
@@ -184,6 +184,13 @@ public class Game {
             Sleep.sleep(2);
             return false;
         } else if (before instanceof Item) {
+            System.out.printf(
+                "Jogador %s pegou um item!",
+                p.toString()
+            );
+
+            System.out.println();
+
             this.history.add(Colors.ANSI_GREEN + String.format("%s: %s -> %s (%s)",
                 p.toString(),
                 this.board.getBoardCoordByPosition(p),
@@ -194,6 +201,136 @@ public class Game {
             ArrayList<Item> playerItems = p.getItems();
             playerItems.add((Item) before);
             p.setItems(playerItems);
+
+            if (before instanceof ItemHearRumor) {
+                System.out.printf("Jogador %s pegou o item 'Ouvir um boato' e agora seu proximo movimento será aleatório", p.toString());
+            } else if (before instanceof ItemReadReal) {
+                System.out.printf("Jogador %s pegou o item 'Ler noticia real' e agora pode eliminar uma fake news", p.toString());
+                System.out.println();
+                System.out.println("Escolha uma fake news para eliminar:");
+
+                int opt = -1;
+
+                ListIterator<FakeNews> fItr = this.fakeNewsList.listIterator();
+
+                while (fItr.hasNext()) {
+                    FakeNews fakeNews = fItr.next();
+                    System.out.printf("%d) %s [%s]\n", fItr.nextIndex(), fakeNews.toString(), this.board.getBoardCoordByPosition(fakeNews));
+                }
+
+                System.out.println();
+
+                while (opt < 1 || opt > fakeNewsList.size()) {
+                    try {
+                        System.out.print("Digite a opção: ");
+                        opt = this.scanner.nextInt();
+                        System.out.println();
+                    } catch (Exception e) {
+                        System.out.println(
+                            Colors.ANSI_RED + "Opção inválida!" +
+                            Colors.ANSI_RESET);
+                        this.scanner.nextLine();
+                    }
+                }
+
+                FakeNews fakeNews = this.fakeNewsList.get(opt - 1);
+
+                this.board.setPosition(fakeNews.getPosition());
+                this.fakeNewsList.remove(fakeNews);
+
+                System.out.printf("Jogador %s eliminou a fake news %s\n", p.toString(), fakeNews.toString());
+
+                this.history.add(Colors.ANSI_GREEN + String.format("%s: %s -> %s (%s)",
+                    p.toString(),
+                    this.board.getBoardCoordByPosition(p),
+                    this.board.getBoardCoordByPosition(newPos),
+                    newPos.getDirection()
+                ) + Colors.ANSI_RESET);
+
+                Sleep.sleep(2);
+            } else if (before instanceof ItemReport) {
+                System.out.printf("Jogador %s pegou o item 'Denunciar Fake News' e agora pode eliminar qualquer fake news das 8 posições adjacentes", p.toString());
+                System.out.println();
+                int opt = -1;
+
+                ArrayList<Position> adjacentPositions = this.board.getFakeNewsAdjFakeNews(p.getPosition());
+
+                while ((opt < 1 || opt > adjacentPositions.size())) {
+                    try {
+                        if (adjacentPositions.size() == 0) {
+                            System.out.println();
+                            System.out.println(
+                                Colors.ANSI_RED + "Não há Fake News" +
+                                Colors.ANSI_RESET);
+
+                            Sleep.sleep(2);
+                            return true;
+                        }
+                        System.out.println("Escolha uma posição para eliminar a fake news:");
+                        for(int i = 0; i < adjacentPositions.size(); i++)
+                            System.out.printf("%d) %s\n", i + 1, this.board.getBoardCoordByPosition(adjacentPositions.get(i)));
+                        System.out.print("Digite a opção: ");
+                        opt = this.scanner.nextInt();
+                        System.out.println();
+                    } catch (Exception e) {
+                        System.out.println(
+                            Colors.ANSI_RED + "Opção inválida!" +
+                            Colors.ANSI_RESET);
+                        this.scanner.nextLine();
+                    }
+                }
+
+                Position adjacentPosition = adjacentPositions.get(opt - 1);
+
+                System.out.println("Posição escolhida: " + this.board.getBoardCoordByPosition(adjacentPosition));
+
+                FakeNews fakeNews = (FakeNews) this.board.getPosition(adjacentPosition);
+
+
+                this.board.setPosition(fakeNews.getPosition());
+                this.fakeNewsList.remove(fakeNews);
+                
+
+                System.out.printf("Jogador %s eliminou a fake news %s\n", p.toString(), fakeNews.toString());
+
+                this.history.add(Colors.ANSI_GREEN + String.format("%s: %s -> %s (%s)",
+                    p.toString(),
+                    this.board.getBoardCoordByPosition(p),
+                    this.board.getBoardCoordByPosition(newPos),
+                    newPos.getDirection()
+                ) + Colors.ANSI_RESET);
+
+                Sleep.sleep(2);
+            } else if (before instanceof ItemRun) {
+                System.out.println("Jogador " + p.toString() + " pegou o item 'Correr' e agora pode se mover para qualquer posição do tabuleiro");
+                System.out.println("Linha (Número) e Coluna (Letra) separados por espaço (Ex: 1 A)");
+
+                int row = 0;
+                char column = ' ';
+                while (true) {
+                    row = this.scanner.nextInt();
+                    column = this.scanner.next().charAt(0);
+                    System.out.println();
+
+                    if (column < 'A' || column > 'I' || row < 1 || row > 9) {
+                        System.out.println(
+                            Colors.ANSI_RED + "Posição inválida!" +
+                            Colors.ANSI_RESET);
+                        System.out.println("Linha (Número) e Coluna (Letra) separados por espaço (Ex: 1 A)");
+                        this.scanner.nextLine();
+                        continue;
+                    }
+
+                    int columnInt = column - 'A' + 1;
+
+                    System.out.printf("Jogador %s se moveu para a posição [%d:%s]", p.toString(), row, column);
+
+                    p.setPosition(new Position(8 - (row - 1), columnInt - 1));
+                    this.board.setPosition(p);
+                    return true;
+
+                }
+            }
 
             p.setPosition(newPos);
             this.board.setPosition(p);

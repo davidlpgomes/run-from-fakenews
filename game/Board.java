@@ -136,6 +136,51 @@ public class Board {
         return possiblePositions.get(i);
     }
 
+    public ArrayList<Position> getFakeNewsAdjFakeNews(Position pos){
+        ArrayList<Position> possiblePositions = new ArrayList<Position>();
+
+        int x = pos.getX();
+        int y = pos.getY();
+        int s = this.getSize();
+
+        // North
+        if (x - 1 >= 0 && this.getPosition(x - 1, y) instanceof FakeNews)
+            possiblePositions.add(new Position(x - 1, y));
+
+        // South
+        if (x + 1 < s && this.getPosition(x + 1, y) instanceof FakeNews)
+            possiblePositions.add(new Position(x + 1, y));
+
+        // West
+        if (y - 1 >= 0 && this.getPosition(x, y - 1) instanceof FakeNews)
+            possiblePositions.add(new Position(x, y - 1));
+
+        // East
+        if (y + 1 < s && this.getPosition(x, y + 1) instanceof FakeNews)
+            possiblePositions.add(new Position(x, y + 1));
+
+        // Northwest
+        if (x - 1 >= 0 && y - 1 >= 0 && this.getPosition(x - 1, y - 1) instanceof FakeNews)
+            possiblePositions.add(new Position(x - 1, y - 1));
+
+        // Northeast
+        if (x - 1 >= 0 && y + 1 < s && this.getPosition(x - 1, y + 1) instanceof FakeNews)
+            possiblePositions.add(new Position(x - 1, y + 1));
+
+        // Southwest
+        if (x + 1 < s && y - 1 >= 0 && this.getPosition(x + 1, y - 1) instanceof FakeNews)
+            possiblePositions.add(new Position(x + 1, y - 1));
+
+        // Southeast
+        if (x + 1 < s && y + 1 < s && this.getPosition(x + 1, y + 1) instanceof FakeNews)
+            possiblePositions.add(new Position(x + 1, y + 1));
+
+        // Random random = new Random();
+        // int i = random.nextInt(possiblePositions.size());
+
+        return possiblePositions;
+    }
+
     public boolean isPosBarrier(int x, int y) {
         int s = this.getSize();
 
@@ -148,6 +193,29 @@ public class Board {
             isBarrier = true;
 
         return isBarrier;
+    }
+
+    public ArrayList<FakeNews> getFakeNewsList() {
+        ArrayList<FakeNews> fakeNewsList = new ArrayList<FakeNews>();
+
+        for (int i = 0; i < this.getSize(); i++) {
+            for (int j = 0; j < this.getSize(); j++) {
+                Entity entity = this.getPosition(i, j);
+
+                if (entity instanceof FakeNews)
+                    fakeNewsList.add((FakeNews) entity);
+            }
+        }
+
+        return fakeNewsList;
+    }
+
+    public FakeNews removeFakeNews(Position pos) {
+        FakeNews fakeNews = (FakeNews) this.getPosition(pos);
+
+        this.setPosition(pos);
+
+        return fakeNews;
     }
 
     public boolean isPosBarrier(Position pos) {

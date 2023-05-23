@@ -7,7 +7,11 @@ public class ItemHearRumor extends Item {
         super(position);
     }
 
-    public String getName() {
-        return "Ouvir boato";
+    public ItemType getType() {
+        return ItemType.HEAR_A_RUMOR;
+    }
+
+    public ItemMessage getMessage() {
+        return ItemMessage.HEAR_A_RUMOR;
     }
 }

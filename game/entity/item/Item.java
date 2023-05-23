@@ -18,5 +18,7 @@ public abstract class Item extends Entity {
         return "??";
     }
 
-    public abstract String getName();
+    public abstract ItemType getType();
+
+    public abstract ItemMessage getMessage();
 }

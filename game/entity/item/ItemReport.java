@@ -7,7 +7,11 @@ public class ItemReport extends Item {
         super(position);
     }
 
-    public String getName() {
-        return "Denunciar fake news";
+    public ItemType getType() {
+        return ItemType.REPORT_FAKE_NEWS;
+    }
+
+    public ItemMessage getMessage() {
+        return ItemMessage.REPORT_FAKE_NEWS;
     }
 }

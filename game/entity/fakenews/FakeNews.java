@@ -14,7 +14,7 @@ public abstract class FakeNews extends Entity {
     }
 
     public String getColor() {
-        return this.color;
+        return FakeNews.color;
     }
 
     public abstract FakeNewsType getType();

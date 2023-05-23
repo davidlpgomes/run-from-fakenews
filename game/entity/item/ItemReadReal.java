@@ -7,7 +7,11 @@ public class ItemReadReal extends Item {
         super(position);
     }
 
-    public String getName() {
-        return "Ler notícia real";
+    public ItemType getType() {
+        return ItemType.READ_A_REAL_NEWS;
+    }
+
+    public ItemMessage getMessage() {
+        return ItemMessage.READ_A_REAL_NEWS;
     }
 }
