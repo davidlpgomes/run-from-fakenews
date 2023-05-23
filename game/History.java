@@ -3,7 +3,7 @@ package game;
 import java.util.ArrayList;
 import java.time.*;
 
-public class History{
+public class History implements HistoryInterface{
     private ArrayList<String> history;
     private int maxLenght;
 
