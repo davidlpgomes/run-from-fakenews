@@ -325,10 +325,57 @@ public class Game {
 
                     System.out.printf("Jogador %s se moveu para a posição [%d:%s]", p.toString(), row, column);
 
+                    // Se a posição escolhida for uma fake news, avisa o jogador
+                    if (this.board.getPosition(new Position(8 - (row - 1), columnInt - 1)) instanceof FakeNews) {
+                        System.out.println();
+                        System.out.println(
+                            Colors.ANSI_RED + "Posição inválida! A posição escolhida é uma fake news!" +
+                            Colors.ANSI_RESET);
+                        System.out.println("Linha (Número) e Coluna (Letra) separados por espaço (Ex: 1 A)");
+                        this.scanner.nextLine();
+                        continue;
+                    }
+                    // Se a posição escolhida for um item, avisa o jogador
+                    if (this.board.getPosition(new Position(8 - (row - 1), columnInt - 1)) instanceof Item) {
+                        System.out.println();
+                        System.out.println(
+                            Colors.ANSI_RED + "Posição inválida! A posição escolhida é um item!" +
+                            Colors.ANSI_RESET);
+                        System.out.println("Linha (Número) e Coluna (Letra) separados por espaço (Ex: 1 A)");
+                        this.scanner.nextLine();
+                        continue;
+                    }
+                    // Se a posição escolhida for um jogador, avisa o jogador
+                    if (this.board.getPosition(new Position(8 - (row - 1), columnInt - 1)) instanceof Player) {
+                        System.out.println();
+                        System.out.println(
+                            Colors.ANSI_RED + "Posição inválida! A posição escolhida é um jogador!" +
+                            Colors.ANSI_RESET);
+                        System.out.println("Linha (Número) e Coluna (Letra) separados por espaço (Ex: 1 A)");
+                        this.scanner.nextLine();
+                        continue;
+                    }
+                    // Se a posição escolhida for uma barreira, avisa o jogador
+                    if (this.board.getPosition(new Position(8 - (row - 1), columnInt - 1)) instanceof Barrier) {
+                        System.out.println();
+                        System.out.println(
+                            Colors.ANSI_RED + "Posição inválida! A posição escolhida é uma barreira!" +
+                            Colors.ANSI_RESET);
+                        System.out.println("Linha (Número) e Coluna (Letra) separados por espaço (Ex: 1 A)");
+                        this.scanner.nextLine();
+                        continue;
+                    }
+
                     p.setPosition(new Position(8 - (row - 1), columnInt - 1));
                     this.board.setPosition(p);
-                    return true;
 
+                    this.history.add(Colors.ANSI_GREEN + String.format("%s: %s -> %s (%s)",
+                        p.toString(),
+                        this.board.getBoardCoordByPosition(p),
+                        this.board.getBoardCoordByPosition(newPos),
+                        newPos.getDirection()
+                    ) + Colors.ANSI_RESET);
+                    return true;
                 }
             }
 
