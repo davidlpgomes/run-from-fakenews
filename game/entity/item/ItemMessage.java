@@ -23,7 +23,7 @@ public enum ItemMessage {
         this.message = message;
     }
     
-    public String getMessage() {
+    public String toString() {
         return message;
     }
 }

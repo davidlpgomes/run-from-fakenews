@@ -8,6 +8,11 @@ public class PossibleMove extends Position {
         this.setDirection(direction);
     }
 
+    public PossibleMove(Position position, String direction) {
+        super(position.getX(), position.getY());
+        this.setDirection(direction);
+    }
+
     //GETTERS
     public String getDirection() {
         return this.direction;
@@ -24,6 +29,7 @@ public class PossibleMove extends Position {
             case "Nordeste":
             case "Sudeste":
             case "Sudoeste":
+            case "*Item*":
                 break;
             default:
                 return;
