@@ -3,13 +3,13 @@ JC = javac
 
 .SUFFIXES: .java .class
 
-.java.class: 
+.java.class:
 	$(JC) $(JFLAGS) $*.java
 
-CLASSES = Main.java 
+CLASSES = Main.java
 
 default: clean classes
-	@java Main
+	@java Main $(ARGS)
 
 classes: $(CLASSES:.java=.class)
 

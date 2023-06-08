@@ -28,7 +28,9 @@ public class Game {
   private int turns;
 
   public Game() {
-    this.turns = MAX_TURNS;
+    int maxTurns = Config.getMaxTurns();
+
+    this.turns = maxTurns;
     this.board = new Board(Game.BOARD_SIZE);
     this.history = new History(Game.BOARD_SIZE);
     this.playerList = new ArrayList<Player>();
@@ -624,14 +626,21 @@ public class Game {
 
     return;
   }
-
+  /**
+   * Initialize fake News
+   * 
+   * @return void
+   * 
+   */
   private void initializeFakeNews() {
     Position pos;
+
+    int number = Config.getNumTypePerFakeNews();
 
     int numberOfTypes = FakeNewsType.values().length;
 
     for (int i = 0; i < numberOfTypes; i++) {
-      for (int j = 0; j < NUMBER_OF_FN_PER_TYPE; j++) {
+      for (int j = 0; j < number; j++) {
         pos = this.board.getRandomEmptyPosition(1, this.board.getSize() - 1);
 
         FakeNews fn = FakeNewsFactory.createFakeNews(
@@ -675,7 +684,9 @@ public class Game {
   }
 
   private void initializeItems() {
-    for (int i = 0; i < Game.NUMBER_OF_ITEMS; i++) this.createRandomItem();
+    int number = Config.getNumItems();
+
+    for (int i = 0; i < number; i++) this.createRandomItem();
 
     return;
   }
