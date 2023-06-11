@@ -10,12 +10,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
-
     private static final int BOARD_SIZE = 9;
     private static final int NUMBER_OF_BARRIERS = 4;
-    private static final int NUMBER_OF_ITEMS = 22;
-    private static final int NUMBER_OF_FN_PER_TYPE = 1;
-    private static final int MAX_TURNS = 20;
 
     private Board board;
     private History history;
@@ -30,7 +26,7 @@ public class Game {
     public Game() {
         int maxTurns = Config.getMaxTurns();
 
-this.turns = maxTurns;
+        this.turns = maxTurns;
         this.board = new Board(Game.BOARD_SIZE);
         this.history = new History(Game.BOARD_SIZE);
         this.playerList = new ArrayList<Player>();
@@ -128,15 +124,15 @@ this.turns = maxTurns;
             int iOpt = -1;
 
             System.out.printf(
-                "Jogador %s possui itens no inventario. Deseja usar?\n",
-                p.toString()
+                "Jogador " + p.toString() + " possui itens (" +
+                p.getItems().size() + ") no inventario. Deseja usar?\n"
             );
 
             System.out.println("0) Nao usar itens.");
 
             ListIterator<Item> itr = p.getItems().listIterator();
             while (itr.hasNext()) {
-                System.out.printf("%d) %s.", ++c, itr.next().getMessage().toString());
+                System.out.printf("%d) %s.\n", ++c, itr.next().getMessage().toString());
             }
 
             System.out.println("");
@@ -323,7 +319,9 @@ this.turns = maxTurns;
                 }
             }
             //Remove o item do inventario.
-            p.getItems().remove(iOpt);
+            if (iOpt > 0)
+                p.getItems().remove(iOpt);
+
             this.board.printBoard(this.history);
         }
 
