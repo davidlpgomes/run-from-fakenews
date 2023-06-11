@@ -2,6 +2,14 @@ import game.Game;
 import game.Config;
 import game.utils.Sleep;
 
+/*
+ * Integrantes:
+ * 
+ * - David Lucas Pereira Gomes      GRR20211757
+ * - Gabriel Simon Batista Ribeiro  GRR20210575
+ * - Matheus Henrique Jandre Ferraz GRR20211757
+ */
+
 public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {
