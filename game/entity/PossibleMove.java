@@ -29,7 +29,7 @@ public class PossibleMove extends Position {
             case "Nordeste":
             case "Sudeste":
             case "Sudoeste":
-            case "*Item*":
+            case "*Correr*":
                 break;
             default:
                 return;

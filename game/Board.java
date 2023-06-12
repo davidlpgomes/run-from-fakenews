@@ -44,7 +44,7 @@ public class Board {
   public Entity getPosition(int x, int y) {
     return this.board[x][y];
   }
-
+  
   public void setPosition(Position position) {
     this.board[position.getX()][position.getY()] = null;
     return;
@@ -195,10 +195,7 @@ public class Board {
       y + 1 < s &&
       this.getPosition(x + 1, y + 1) instanceof FakeNews
     ) possiblePositions.add(new Position(x + 1, y + 1));
-
-    // Random random = new Random();
-    // int i = random.nextInt(possiblePositions.size());
-
+    
     return possiblePositions;
   }
 
@@ -255,7 +252,11 @@ public class Board {
     return this.getBoardCoordByPosition(entity.getPosition());
   }
 
-  public Position isPositionValid(String position) {
+  /**
+   * @param position String que representa uma posicao no tabuleiro. e.g.: 1A ou A1
+   * @return Retorna a nulo se a posicao esta ocupada ou uma nova Position.
+   */
+  public Position isPositionEmpty(String position) {
     if (position.length() != 2) return null;
 
     position = position.toUpperCase();
@@ -280,12 +281,6 @@ public class Board {
     x = this.getSize() - x;
 
     Entity e = this.getPosition(x, y);
-    
-    // System.out.printf(
-    //   "c%d l%d\n",
-    //   e.getPosition().getY(),
-    //   e.getPosition().getX()
-    // );
 
     if (e instanceof FakeNews) {
       System.out.println();

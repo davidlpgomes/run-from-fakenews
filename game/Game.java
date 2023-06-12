@@ -225,24 +225,17 @@ public class Game {
                             if (adjacentPositions.size() == 0) {
                                 System.out.println();
                                 System.out.println(
-                                    Colors.ANSI_RED + "Não há Fake News" + Colors.ANSI_RESET
-                                );
+                                        Colors.ANSI_RED + "Não há Fake News" + Colors.ANSI_RESET);
 
                                 Sleep.sleep(2);
                                 return true;
                             }
-                            System.out.println(
-                                "Escolha uma posição para eliminar a fake news:"
-                            );
-                            for (
-                                int i = 0;
-                                i < adjacentPositions.size();
-                                i++
-                            ) System.out.printf(
-                                "%d) %s\n",
-                                i + 1,
-                                this.board.getBoardCoordByPosition(adjacentPositions.get(i))
-                            );
+                            
+                            System.out.println("Escolha uma posição para eliminar a fake news:");
+                            
+                            for (int i = 0; i < adjacentPositions.size(); i++)
+                                System.out.printf("%d) %s\n", i + 1, this.board.getBoardCoordByPosition(adjacentPositions.get(i)));
+                                
                             System.out.print("Digite a opção: ");
                             opt = this.scanner.nextInt();
                             System.out.println();
@@ -256,14 +249,9 @@ public class Game {
 
                     Position adjacentPosition = adjacentPositions.get(opt - 1);
 
-                    System.out.println(
-                        "Posição escolhida: " +
-                        this.board.getBoardCoordByPosition(adjacentPosition)
-                    );
+                    System.out.println("Posição escolhida: " + this.board.getBoardCoordByPosition(adjacentPosition));
 
-                    FakeNews fakeNews = (FakeNews) this.board.getPosition(
-                            adjacentPosition
-                        );
+                    FakeNews fakeNews = (FakeNews) this.board.getPosition(adjacentPosition);
 
                     this.board.setPosition(fakeNews.getPosition());
                     this.fakeNewsList.remove(fakeNews);
@@ -286,24 +274,20 @@ public class Game {
 
                     Sleep.sleep(2);
                 } else if (selectedItem instanceof ItemRun) {
-                    System.out.println(
-                        "Jogador " +
-                        p.toString() +
-                        " usou o item 'Correr' e agora pode se mover para qualquer posição do tabuleiro"
-                    );
+                    System.out.println("Jogador " + p.toString() + " usou o item 'Correr' e agora pode se mover para qualquer posição do tabuleiro");
 
-                    Position validPos = null;
+                    Position emptyPos = null;
                     String sPosition = "";
 
                     do {
                         System.out.print("Digite a linha e a coluna (ex: 1A):");
                         sPosition = this.scanner.next();
-                        validPos = this.board.isPositionValid(sPosition);
-                    } while (validPos == null);
+                        emptyPos = this.board.isPositionEmpty(sPosition);
+                    } while (emptyPos == null);
 
                     Position oldPos = p.getPosition();
 
-                    PossibleMove newPos = new PossibleMove(validPos, "*Correr*");
+                    PossibleMove newPos = new PossibleMove(emptyPos, "*Correr*");
                     p.setPosition(newPos);
                     this.board.setPosition(p);
                     this.board.setPosition(oldPos);
