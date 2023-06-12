@@ -98,7 +98,8 @@ public class Game {
         // Se 0 players ou 0 turnos perdeu
         if (lost) System.out.println(
             Colors.ANSI_RED + "Voce perdeu :(. Tente novamente." + Colors.ANSI_RESET
-        );
+            );
+        
         System.out.println();
         return;
     }
@@ -317,10 +318,9 @@ public class Game {
                             )
                         );
                 }
-            }
-            //Remove o item do inventario.
-            if (iOpt > 0)
+                //Remove o item do inventario.            
                 p.getItems().remove(iOpt);
+            }
 
             this.board.printBoard(this.history);
         }
