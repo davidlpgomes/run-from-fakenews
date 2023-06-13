@@ -59,14 +59,14 @@ public class Game {
         boolean win = false, lost = false;
 
         while (!win && !lost) {
-            this.board.printBoard(this.history);
+            this.printGameState();
 
             ListIterator<Player> pItr = this.playerList.listIterator();
             while (pItr.hasNext()) {
                 if (!this.movePlayer(pItr.next())) pItr.remove();
 
                 Sleep.sleep(2);
-                this.board.printBoard(this.history);
+                this.printGameState();
             }
 
             ListIterator<FakeNews> fItr = this.fakeNewsList.listIterator();
@@ -79,7 +79,7 @@ public class Game {
                 }
 
                 Sleep.sleep(3);
-                this.board.printBoard(this.history);
+                this.printGameState();
             }
 
             if (this.fakeNewsList.size() <= 0) win = true;
@@ -306,7 +306,7 @@ public class Game {
                 p.getItems().remove(iOpt);
             }
 
-            this.board.printBoard(this.history);
+            this.printGameState();
         }
 
         opt = -1;
@@ -602,12 +602,13 @@ public class Game {
         this.playerList.add(new Player(new Position(last, middle)));
         this.playerList.add(new Player(new Position(middle, 0)));
 
-        for (int i = 0; i < this.playerList.size(); i++) this.board.setPosition(
-                playerList.get(i)
-            );
+        for (int i = 0; i < this.playerList.size(); i++)
+            this.board.setPosition(
+                    playerList.get(i));
 
         return;
     }
+    
     /**
      * Initialize fake News
      * 
@@ -668,8 +669,67 @@ public class Game {
     private void initializeItems() {
         int number = Config.getNumItems();
 
-        for (int i = 0; i < number; i++) this.createRandomItem();
+        for (int i = 0; i < number; i++)
+            this.createRandomItem();
 
         return;
+    }
+
+    // Impressao do estado do jogo
+    private void printBoardSeparator() {
+        System.out.print("  +");
+
+        for (int i = 0; i < this.board.getSize(); i++) {
+            System.out.print("----+");
+        }
+
+        System.out.println();
+
+        return;
+    }
+
+    private void refreshScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public void printGameState() {
+        this.refreshScreen();
+
+        // Imprime turnos
+        System.out.printf("Turnos: %2d/%2d\n", (Config.getMaxTurns() - this.turns) + 1, Config.getMaxTurns());
+
+        this.printBoardSeparator();
+
+        for (int i = 0; i < this.board.getSize(); i++) {
+            System.out.printf("%d |", this.board.getSize() - i);
+
+            for (int j = 0; j < this.board.getSize(); j++) {
+                if (this.board.getPosition(i, j) != null) {
+                System.out.print(
+                    " " +
+                    this.board.getPosition(i, j).getColor() +
+                    this.board.getPosition(i, j).toString() +
+                    Colors.ANSI_RESET +
+                    " |"
+                );
+                } else {
+                    System.out.print("    |");
+                }
+            }
+
+            // Prints board's history
+            if (history.get(i) != null)
+                System.out.printf("  ● %s", this.history.get(i));
+
+            System.out.println();
+            this.printBoardSeparator();
+        }
+
+        System.out.print("    ");
+        for (int i = 65; i < this.board.getSize() + 65; i++)
+            System.out.printf("%c    ", i);
+
+        System.out.println("\n");
     }
 }
