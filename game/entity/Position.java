@@ -2,7 +2,6 @@ package game.entity;
 
 public class Position {
     protected boolean valid;
-
     protected int x;
     protected int y;
 
@@ -12,17 +11,23 @@ public class Position {
         this.setY(y);
     }
 
+    // GETTERS
     public boolean isValid() {
         return this.valid;
     }
 
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    // SETTERS
     public void setValid(boolean valid) {
         this.valid = valid;
         return;
-    }
-
-    public int getX() {
-        return this.x;
     }
 
     public void setX(int x) {
@@ -31,10 +36,6 @@ public class Position {
 
         this.x = x;
         return;
-    }
-
-    public int getY() {
-        return this.y;
     }
 
     public void setY(int y) {

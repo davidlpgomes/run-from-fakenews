@@ -9,18 +9,16 @@ import game.*;
 public class Player extends Entity {
     private static final String color = Colors.ANSI_GREEN;
     private static int lastId = 0;
-
     private int id;
-
     private ArrayList<Item> items;
 
     public Player(Position position) {
         this.setPosition(position);
         this.id = ++lastId;
-
         this.items = new ArrayList<Item>();
     }
 
+    // GETTERS
     public String getColor() {
         return Player.color;
     }
@@ -33,14 +31,12 @@ public class Player extends Entity {
         return this.items;
     }
 
+    // SETTERS
     public void setItems(ArrayList<Item> items) {
         this.items = items;
     }
 
-    public String toString() {
-        return "J" + this.id;
-    }
-
+    //METHODS
     public ArrayList<PossibleMove> getPossibleMoves(Board board) {
         ArrayList<PossibleMove> possibleMoves = new ArrayList<PossibleMove>();
         
@@ -53,10 +49,7 @@ public class Player extends Entity {
             possibleMoves.add(new PossibleMove(x - 1, y, "Norte"));
 
         // South
-        if (
-            x + 1 < s &&
-            !(board.getPosition(x + 1, y) instanceof Barrier)
-        )
+        if (x + 1 < s && !(board.getPosition(x + 1, y) instanceof Barrier))
             possibleMoves.add(new PossibleMove(x + 1, y, "Sul"));
 
         // West
@@ -64,12 +57,13 @@ public class Player extends Entity {
             possibleMoves.add(new PossibleMove(x, y - 1, "Oeste"));
 
         // East
-        if (
-            y + 1 < s &&
-            !(board.getPosition(x, y + 1) instanceof Barrier)
-        )
+        if (y + 1 < s && !(board.getPosition(x, y + 1) instanceof Barrier))
             possibleMoves.add(new PossibleMove(x, y + 1, "Leste"));
 
         return possibleMoves;
+    }
+
+    public String toString() {
+        return "J" + this.id;
     }
 }

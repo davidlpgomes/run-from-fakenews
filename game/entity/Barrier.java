@@ -10,7 +10,7 @@ public class Barrier extends Entity {
     }
     
     public String getColor() {
-        return this.color;
+        return Barrier.color;
     }
 
     public String toString() {

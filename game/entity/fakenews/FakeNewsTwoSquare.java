@@ -12,14 +12,12 @@ public class FakeNewsTwoSquare extends FakeNews {
         super(position);
     }
 
-    public String toString() {
-        return "F2";
-    }
-
+    // GETTERS
     public FakeNewsType getType() {
         return FakeNewsDiagonal.type;
     }
 
+    //METHODS
     public ArrayList<PossibleMove> getPossibleMoves(Board board){
         ArrayList<PossibleMove> possibleMoves = new ArrayList<PossibleMove>();
         
@@ -43,5 +41,9 @@ public class FakeNewsTwoSquare extends FakeNews {
             possibleMoves.add(new PossibleMove(x, y + 2, "Leste"));
 
         return possibleMoves;
+    }
+
+    public String toString() {
+        return "F2";
     }
 }

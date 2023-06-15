@@ -15,10 +15,10 @@ public class Config {
         Config.maxTurns = 0;
     }
 
+    // GETTERS
     public int getDifficulty() {
         return this.difficulty;
     }
-
 
     public int getNumFakeNews() {
         return this.numFakeNews;
@@ -36,6 +36,7 @@ public class Config {
         return maxTurns;
     }
 
+    // SETTERS
     public void setNumFakeNews(int numFakeNews) {
         this.numFakeNews = numFakeNews;
     }
@@ -56,6 +57,7 @@ public class Config {
         this.difficulty = difficulty;
     }
 
+    // METHODS
     public void ConfigGame(String difficulty) {
         if (difficulty == "easy") {
             this.setNumFakeNews(2);
@@ -84,5 +86,4 @@ public class Config {
             this.setMaxTurns(13);
         }
     }
-
 }

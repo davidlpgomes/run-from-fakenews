@@ -13,10 +13,12 @@ public abstract class FakeNews extends Entity {
         this.setPosition(position);
     }
 
+    // GETTERS
     public String getColor() {
         return FakeNews.color;
     }
 
+    //METHODS
     public abstract FakeNewsType getType();
 
     public abstract ArrayList<PossibleMove> getPossibleMoves(Board board);

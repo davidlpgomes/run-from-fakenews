@@ -40,6 +40,6 @@ public class PossibleMove extends Position {
     }
 
     public String toString(){
-        return String.format("Vai para o %5s: (x:%d, y:%d)", this.direction, this.x, this.y);
+        return String.format("(x:%d, y:%d) -> %5s", this.x, this.y, this.direction);
     }
 }

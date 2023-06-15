@@ -10,10 +10,12 @@ public abstract class Item extends Entity {
         this.setPosition(position);
     }
 
+    // GETTERS
     public String getColor() {
         return Item.color;
     }
 
+    // METHODS
     public String toString() {
         return "??";
     }
